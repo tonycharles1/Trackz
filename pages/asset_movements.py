@@ -18,11 +18,11 @@ def show(db, role):
             
             col1, col2, col3 = st.columns(3)
             with col1:
-                asset_code = st.selectbox("Asset Code *", [""] + list(asset_options.keys()), required=True)
+                asset_code = st.selectbox("Asset Code *", [""] + list(asset_options.keys()))
             with col2:
-                from_location = st.selectbox("From Location *", [""] + location_names, required=True)
+                from_location = st.selectbox("From Location *", [""] + location_names)
             with col3:
-                to_location = st.selectbox("To Location *", [""] + location_names, required=True)
+                to_location = st.selectbox("To Location *", [""] + location_names)
             
             notes = st.text_area("Notes")
             

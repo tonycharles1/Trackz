@@ -120,10 +120,10 @@ def add_asset_form(db):
         col1, col2 = st.columns(2)
         
         with col1:
-            item_name = st.text_input("Item Name *", required=True)
+            item_name = st.text_input("Item Name *")
             categories = db.get_all('Categories')
             category_names = [c.get('Category Name', '') for c in categories]
-            asset_category = st.selectbox("Asset Category *", [""] + category_names, required=True)
+            asset_category = st.selectbox("Asset Category *", [""] + category_names)
             subcategories = db.get_all('Subcategories')
             subcategory_names = [s.get('Subcategory Name', '') for s in subcategories]
             asset_subcategory = st.selectbox("Asset Subcategory", [""] + subcategory_names)
