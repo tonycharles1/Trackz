@@ -10,7 +10,7 @@ def show(db, role):
     # Add location form
     with st.expander("➕ Add New Location", expanded=False):
         with st.form("add_location_form"):
-            location_name = st.text_input("Location Name *")
+            location_name = st.text_input("Location Name *", key="location_name_input")
             submitted = st.form_submit_button("💾 Add Location", use_container_width=True)
             
             if submitted:

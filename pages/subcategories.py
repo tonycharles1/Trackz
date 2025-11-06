@@ -13,8 +13,8 @@ def show(db, role):
             categories = db.get_all('Categories')
             category_options = {c.get('Category Name', ''): c.get('ID', '') for c in categories}
             
-            subcategory_name = st.text_input("Subcategory Name *")
-            category_name = st.selectbox("Category *", [""] + list(category_options.keys()))
+            subcategory_name = st.text_input("Subcategory Name *", key="subcategory_name_input")
+            category_name = st.selectbox("Category *", [""] + list(category_options.keys()), key="subcategory_category_select")
             
             submitted = st.form_submit_button("💾 Add Subcategory", use_container_width=True)
             

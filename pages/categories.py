@@ -10,7 +10,7 @@ def show(db, role):
     # Add category form
     with st.expander("➕ Add New Category", expanded=False):
         with st.form("add_category_form"):
-            category_name = st.text_input("Category Name *")
+            category_name = st.text_input("Category Name *", key="category_name_input")
             submitted = st.form_submit_button("💾 Add Category", use_container_width=True)
             
             if submitted:

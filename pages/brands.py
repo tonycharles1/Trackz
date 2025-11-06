@@ -10,7 +10,7 @@ def show(db, role):
     # Add brand form
     with st.expander("➕ Add New Brand", expanded=False):
         with st.form("add_brand_form"):
-            brand_name = st.text_input("Brand Name *")
+            brand_name = st.text_input("Brand Name *", key="brand_name_input")
             submitted = st.form_submit_button("💾 Add Brand", use_container_width=True)
             
             if submitted:

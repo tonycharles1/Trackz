@@ -12,11 +12,11 @@ def show(db, role):
         with st.form("add_asset_type_form"):
             col1, col2, col3 = st.columns(3)
             with col1:
-                asset_code = st.text_input("Asset Code *")
+                asset_code = st.text_input("Asset Code *", key="asset_type_code_input")
             with col2:
-                asset_type = st.text_input("Asset Type *")
+                asset_type = st.text_input("Asset Type *", key="asset_type_name_input")
             with col3:
-                depreciation_value = st.number_input("Depreciation Value (%) *", min_value=0.0, max_value=100.0, step=0.01)
+                depreciation_value = st.number_input("Depreciation Value (%) *", min_value=0.0, max_value=100.0, step=0.01, key="depreciation_value_input")
             
             submitted = st.form_submit_button("💾 Add Asset Type", use_container_width=True)
             
