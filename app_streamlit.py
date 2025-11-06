@@ -930,9 +930,9 @@ def login_page():
         
         .login-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 350px;
             border: 1px solid var(--primary);
-            padding: 40px 30px;
+            padding: 30px 25px;
             background-color: var(--secondary);
             box-shadow: var(--shadow);
             position: relative;
@@ -954,14 +954,14 @@ def login_page():
         
         .login-container h1 {
             color: var(--primary) !important;
-            margin-bottom: 30px;
-            font-size: 28px;
+            margin-bottom: 25px;
+            font-size: 24px;
             font-weight: 700;
             text-align: center;
         }
         
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             position: relative;
         }
         
@@ -1013,7 +1013,7 @@ def login_page():
         .divider {
             display: flex;
             align-items: center;
-            margin: 25px 0;
+            margin: 20px 0;
             color: var(--primary);
             font-weight: bold;
             font-size: 14px;
@@ -1030,7 +1030,7 @@ def login_page():
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         .social-btn {
@@ -1054,7 +1054,7 @@ def login_page():
         
         .footer {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 15px;
             color: var(--primary);
             font-size: 14px;
         }
@@ -1112,6 +1112,27 @@ def login_page():
             transform: translate(-2px, -2px) !important;
         }
         
+        /* Register button styling */
+        .register-button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent) !important;
+            color: var(--secondary) !important;
+            border: 2px solid var(--primary) !important;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            border-radius: 0;
+            text-align: center;
+        }
+        
+        .register-button:hover {
+            box-shadow: 4px 4px 0px var(--primary);
+            transform: translate(-2px, -2px);
+        }
+        
         /* Hide Streamlit default elements */
         .main .block-container {
             padding: 20px !important;
@@ -1166,7 +1187,7 @@ def login_page():
                         st.error("Invalid username or password")
                 else:
                     st.error("Database connection failed")
-        
+    
         # Divider and social login
         st.markdown("""
         <div class="divider">OR</div>
@@ -1175,25 +1196,24 @@ def login_page():
             <div class="social-btn">F</div>
             <div class="social-btn">X</div>
         </div>
-        <div class="footer">
-            Don't have an account? <a href="#" id="register-link">Sign up</a>
-        </div>
         </div>
         """, unsafe_allow_html=True)
         
-        # Hidden button to trigger registration
-        if st.button("Register", key="toggle_register", type="secondary", help="Click to register"):
+        # Register button (orange, styled like Sign In button)
+        if st.button("REGISTER", key="toggle_register", use_container_width=True, type="primary"):
             st.session_state.show_register = True
             st.rerun()
         
-        # JavaScript to trigger registration
+        # Style the register button to match
         st.markdown("""
-        <script>
-            document.getElementById('register-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector('button[data-testid="baseButton-secondary"]').click();
-            });
-        </script>
+        <style>
+            button[key="toggle_register"] {
+                background-color: var(--accent) !important;
+                color: var(--secondary) !important;
+                border: 2px solid var(--primary) !important;
+                margin-top: 15px !important;
+            }
+        </style>
         """, unsafe_allow_html=True)
     
     # Registration form (same style) - Only show if register is selected
@@ -1263,26 +1283,23 @@ def login_page():
                 else:
                     st.error("Please fill in all fields")
         
-        st.markdown("""
-        <div class="footer">
-            Already have an account? <a href="#" id="login-link">Sign in</a>
-        </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
         
-        # Button to go back to login
-        if st.button("Back to Login", key="back_to_login", type="secondary"):
+        # Login button (orange, styled like Sign Up button)
+        if st.button("LOGIN", key="back_to_login", use_container_width=True, type="primary"):
             st.session_state.show_register = False
             st.rerun()
         
-        # JavaScript to trigger login
+        # Style the login button to match
         st.markdown("""
-        <script>
-            document.getElementById('login-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector('button[data-testid="baseButton-secondary"]').click();
-            });
-        </script>
+        <style>
+            button[key="back_to_login"] {
+                background-color: var(--accent) !important;
+                color: var(--secondary) !important;
+                border: 2px solid var(--primary) !important;
+                margin-top: 15px !important;
+            }
+        </style>
         """, unsafe_allow_html=True)
 
 # Main app
