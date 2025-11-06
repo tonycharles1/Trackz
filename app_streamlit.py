@@ -900,248 +900,34 @@ def check_password(password: str, password_hash: str) -> bool:
     return hash_password(password) == password_hash
 
 def login_page():
-    """Login page - Modern minimalist design with shadow effects"""
-    # Inject CSS for modern login design
+    """Login page - Modern two-panel design with tabs"""
+    import streamlit.components.v1 as components
+    
+    # Determine which tab is active
+    current_tab = st.session_state.get('login_tab', 'login')
+    
+    # Inject modern CSS
     st.markdown("""
     <style>
         :root {
-            --primary: #000000;
-            --secondary: #FFFFFF;
-            --accent: #FF5E5B;
-            --shadow: 8px 8px 0px var(--primary);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Courier New', monospace !important;
+            --bg: #f6f9ff;
+            --card: #ffffff;
+            --accent1: #5b6fff;
+            --accent2: #7dd3fc;
+            --muted: #6b7280;
+            --glass: rgba(255,255,255,0.6);
+            --radius: 14px;
+            --shadow: 0 8px 30px rgba(28,36,70,0.08);
         }
         
         .stApp {
-            background-color: var(--secondary) !important;
-            background: var(--secondary) !important;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            background: linear-gradient(160deg, var(--bg) 0%, #eef4ff 100%) !important;
+            background-attachment: fixed !important;
         }
         
-        .login-container {
-            width: 100%;
-            max-width: 350px;
-            border: 1px solid var(--primary);
-            padding: 30px 25px;
-            background-color: var(--secondary);
-            box-shadow: var(--shadow);
-            position: relative;
-            border-radius: 12px;
-            margin: 0 auto;
-        }
-        
-        .login-container::before {
-            content: '';
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            right: -6px;
-            bottom: -6px;
-            border: 1px solid var(--primary);
-            z-index: -1;
-            border-radius: 12px;
-        }
-        
-        .login-container h1 {
-            color: var(--primary) !important;
-            margin-bottom: 25px;
-            font-size: 24px;
-            font-weight: 700;
-            text-align: center;
-        }
-        
-        .input-group {
-            margin-bottom: 15px;
-            position: relative;
-        }
-        
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: var(--primary) !important;
-            font-size: 14px;
-        }
-        
-        .input-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid var(--primary) !important;
-            background-color: var(--secondary) !important;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s;
-            color: var(--primary) !important;
-        }
-        
-        .input-group input:focus {
-            box-shadow: 4px 4px 0px var(--primary) !important;
-        }
-        
-        .input-group input::placeholder {
-            color: #999 !important;
-        }
-        
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--accent) !important;
-            color: var(--secondary) !important;
-            border: 2px solid var(--primary) !important;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.3s;
-        }
-        
-        .login-btn:hover {
-            box-shadow: 4px 4px 0px var(--primary) !important;
-            transform: translate(-2px, -2px);
-        }
-        
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 20px 0;
-            color: var(--primary);
-            font-weight: bold;
-            font-size: 14px;
-        }
-        
-        .divider::before, .divider::after {
-            content: "";
-            flex: 1;
-            border-bottom: 2px solid var(--primary);
-            margin: 0 10px;
-        }
-        
-        .social-login {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .social-btn {
-            width: 50px;
-            height: 50px;
-            border: 2px solid var(--primary);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            background-color: var(--secondary);
-            font-weight: bold;
-            color: var(--primary);
-        }
-        
-        .social-btn:hover {
-            box-shadow: 4px 4px 0px var(--primary);
-            transform: translate(-2px, -2px);
-        }
-        
-        .footer {
-            text-align: center;
-            margin-top: 15px;
-            color: var(--primary);
-            font-size: 14px;
-        }
-        
-        .footer a {
-            color: var(--primary);
-            font-weight: bold;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-        
-        /* Style Streamlit inputs */
-        .login-container .stTextInput>div>div>input {
-            width: 100% !important;
-            padding: 12px 15px !important;
-            border: 2px solid var(--primary) !important;
-            background-color: var(--secondary) !important;
-            font-size: 16px !important;
-            outline: none !important;
-            transition: all 0.3s !important;
-            color: var(--primary) !important;
-            border-radius: 0 !important;
-        }
-        
-        .login-container .stTextInput>div>div>input:focus {
-            box-shadow: 4px 4px 0px var(--primary) !important;
-        }
-        
-        .login-container .stTextInput label {
-            display: block !important;
-            margin-bottom: 8px !important;
-            font-weight: bold !important;
-            color: var(--primary) !important;
-            font-size: 14px !important;
-        }
-        
-        /* Style Streamlit buttons */
-        .login-container .stButton>button {
-            width: 100% !important;
-            padding: 12px !important;
-            background-color: var(--accent) !important;
-            color: var(--secondary) !important;
-            border: 2px solid var(--primary) !important;
-            font-size: 16px !important;
-            font-weight: bold !important;
-            cursor: pointer !important;
-            margin-top: 10px !important;
-            transition: all 0.3s !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-        }
-        
-        .login-container .stButton>button:hover {
-            box-shadow: 4px 4px 0px var(--primary) !important;
-            transform: translate(-2px, -2px) !important;
-        }
-        
-        /* Register button styling */
-        .register-button {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--accent) !important;
-            color: var(--secondary) !important;
-            border: 2px solid var(--primary) !important;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s;
-            border-radius: 0;
-            text-align: center;
-        }
-        
-        .register-button:hover {
-            box-shadow: 4px 4px 0px var(--primary);
-            transform: translate(-2px, -2px);
-        }
-        
-        /* Hide Streamlit default elements */
         .main .block-container {
-            padding: 20px !important;
+            padding: 0 !important;
             max-width: 100% !important;
-        }
-        
-        /* Hide secondary button visually */
-        button[data-testid="baseButton-secondary"] {
-            display: none !important;
         }
         
         #MainMenu {visibility: hidden;}
@@ -1150,168 +936,303 @@ def login_page():
     </style>
     """, unsafe_allow_html=True)
     
-    # Show login form only if register is NOT selected
-    if not st.session_state.get('show_register', False):
-        # Login form container
-        st.markdown("""
-        <div class="login-container">
-            <h1>LOGIN</h1>
-        """, unsafe_allow_html=True)
-        
-        # Login form
-        with st.form("login_form", clear_on_submit=False):
-            st.markdown('<div class="input-group">', unsafe_allow_html=True)
-            username = st.text_input("EMAIL", placeholder="your@email.com", key="login_username")
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            st.markdown('<div class="input-group">', unsafe_allow_html=True)
-            password = st.text_input("PASSWORD", type="password", placeholder="••••••••", key="login_password")
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            submit = st.form_submit_button("SIGN IN", use_container_width=True)
-            
-            if submit:
-                db = get_db()
-                if db:
-                    users = db.get_all('Users')
-                    user = next((u for u in users if u.get('Username') == username), None)
-                    
-                    if user and check_password(password, user.get('Password', '')):
-                        st.session_state.authenticated = True
-                        st.session_state.user_id = username
-                        st.session_state.role = user.get('Role', 'user')
-                        st.session_state.db = db
-                        st.success("Login successful!")
-                        st.rerun()
-                    else:
-                        st.error("Invalid username or password")
-                else:
-                    st.error("Database connection failed")
-    
-        # Divider and social login
-        st.markdown("""
-        <div class="divider">OR</div>
-        <div class="social-login">
-            <div class="social-btn">G</div>
-            <div class="social-btn">F</div>
-            <div class="social-btn">X</div>
-        </div>
-        <div class="footer">
-            Don't have an account? <a href="#" id="register-link">Sign up</a>
-        </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Hidden button to trigger registration
-        if st.button("Register", key="toggle_register", type="secondary", help="Click to register"):
-            st.session_state.show_register = True
-            st.rerun()
-        
-        # JavaScript to trigger registration from link
-        st.markdown("""
-        <script>
-            document.getElementById('register-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector('button[data-testid="baseButton-secondary"]').click();
-            });
-        </script>
-        """, unsafe_allow_html=True)
-    
-    # Registration form (same style) - Only show if register is selected
-    if st.session_state.get('show_register', False):
-        # Hide login form when showing register
-        st.markdown("""
+    # Create the HTML component with login/register forms
+    html_content = f"""
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
         <style>
-            .login-container:first-of-type {
-                display: none !important;
-            }
+            :root{{
+                --bg:#f6f9ff;
+                --card:#ffffff;
+                --accent1:#5b6fff;
+                --accent2:#7dd3fc;
+                --muted:#6b7280;
+                --glass: rgba(255,255,255,0.6);
+                --radius:14px;
+                --shadow: 0 8px 30px rgba(28,36,70,0.08);
+                font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            }}
+            *{{box-sizing:border-box}}
+            html,body{{height:100%; margin:0; padding:0}}
+            body{{
+                background: linear-gradient(160deg,var(--bg) 0%, #eef4ff 100%);
+                display:grid;
+                place-items:center;
+                padding:32px;
+                -webkit-font-smoothing:antialiased;
+                -moz-osx-font-smoothing:grayscale;
+                color:#111827;
+            }}
+            .container{{
+                width:100%;
+                max-width:980px;
+                background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.95));
+                border-radius:18px;
+                box-shadow:var(--shadow);
+                overflow:hidden;
+                display:grid;
+                grid-template-columns: 420px 1fr;
+                min-height:520px;
+            }}
+            .hero{{
+                padding:36px 28px;
+                background: linear-gradient(180deg,var(--accent1), #9aa7ff);
+                color:white;
+                display:flex;
+                flex-direction:column;
+                justify-content:center;
+                gap:18px;
+            }}
+            .logo{{
+                font-weight:700; letter-spacing:0.4px; font-size:20px;
+                display:flex; align-items:center; gap:12px;
+            }}
+            .logo .orb{{width:44px; height:44px; border-radius:10px; background:rgba(255,255,255,0.18); display:grid; place-items:center; font-weight:700}}
+            .hero h1{{font-size:26px; margin:0}}
+            .hero p{{margin:0; opacity:0.95}}
+            .formArea{{
+                padding:34px 40px;
+                background: linear-gradient(180deg,var(--card), rgba(255,255,255,0.98));
+            }}
+            .tabs{{display:flex; gap:8px; margin-bottom:14px}}
+            .tab{{padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600; color:var(--muted); transition:all 0.2s}}
+            .tab.active{{background: linear-gradient(90deg, rgba(91,111,255,0.12), rgba(125,211,252,0.1)); color:var(--accent1)}}
+            .tab:hover{{background:rgba(91,111,255,0.08)}}
+            form{{max-width:520px}}
+            .field{{display:flex; flex-direction:column; gap:8px; margin-bottom:12px}}
+            label{{font-size:13px; color:var(--muted); font-weight:500}}
+            input[type="text"], input[type="email"], input[type="password"], input[type="tel"]{{
+                padding:12px 14px; border-radius:10px; border:1px solid #e6e9f2; background:transparent; outline:none; font-size:15px;
+                transition:box-shadow .12s, border-color .12s
+            }}
+            input:focus{{border-color:var(--accent1); box-shadow:0 6px 18px rgba(91,111,255,0.12)}}
+            .row{{display:flex; gap:12px}}
+            .row .field{{flex:1}}
+            .actions{{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:6px}}
+            .btn{{
+                padding:10px 14px; border-radius:10px; border:0; font-weight:700; cursor:pointer; font-size:15px; min-width:120px;
+                transition:all 0.2s
+            }}
+            .btn.primary{{background:linear-gradient(90deg,var(--accent1), #7b8dff); color:white; box-shadow: 0 8px 22px rgba(91,111,255,0.18)}}
+            .btn.primary:hover{{transform:translateY(-1px); box-shadow: 0 10px 28px rgba(91,111,255,0.25)}}
+            .btn.ghost{{background:transparent; color:var(--muted); border:1px solid #eef2ff}}
+            .muted{{color:var(--muted); font-size:13px}}
+            .sep{{display:flex; align-items:center; gap:12px; margin:18px 0}}
+            .sep span{{height:1px; background:#eef2ff; flex:1}}
+            .sep .txt{{font-size:13px; color:var(--muted); text-align:center}}
+            .socials{{display:flex; gap:10px}}
+            .socials button{{flex:1; padding:10px; border-radius:10px; border:1px solid #eef2ff; background:white; cursor:pointer; transition:all 0.2s}}
+            .socials button:hover{{border-color:var(--accent1); background:#f8faff}}
+            .foot{{margin-top:18px; font-size:13px; color:var(--muted)}}
+            .foot a{{color:var(--accent1); text-decoration:none; font-weight:500}}
+            .foot a:hover{{text-decoration:underline}}
+            @media (max-width:880px){{
+                .container{{grid-template-columns:1fr; padding:18px; min-height:unset}}
+                .hero{{order:2; padding:20px}}
+            }}
         </style>
-        """, unsafe_allow_html=True)
-        
+    </head>
+    <body>
+        <div class="container" role="main">
+            <section class="hero">
+                <div class="logo"><div class="orb">📦</div> Asset Management</div>
+                <h1>Welcome back</h1>
+                <p>Quick and secure login for your Asset Management System. Clean, responsive layout.</p>
+                <div style="margin-top:auto; font-size:13px; opacity:0.95">New here? Switch to Register from the tab above.</div>
+            </section>
+            <section class="formArea">
+                <div class="tabs" role="tablist">
+                    <div class="tab {'active' if current_tab == 'login' else ''}" id="tab-login" onclick="switchTab('login')">Login</div>
+                    <div class="tab {'active' if current_tab == 'register' else ''}" id="tab-register" onclick="switchTab('register')">Register</div>
+                </div>
+                <div id="form-container"></div>
+            </section>
+        </div>
+        <script>
+            function switchTab(tab) {{
+                window.parent.postMessage({{type: 'switchTab', tab: tab}}, '*');
+            }}
+            window.addEventListener('message', function(event) {{
+                if (event.data.type === 'updateTab') {{
+                    const tab = event.data.tab;
+                    document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+                    document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+                }}
+            }});
+        </script>
+    </body>
+    </html>
+    """
+    
+    # Use Streamlit columns to create the two-panel layout
+    col1, col2 = st.columns([1.2, 1.8])
+    
+    with col1:
+        # Hero section
         st.markdown("""
-        <div class="login-container">
-            <h1>REGISTER</h1>
+        <div style="background: linear-gradient(180deg, #5b6fff, #9aa7ff); padding: 36px 28px; border-radius: 18px 0 0 18px; color: white; height: 520px; display: flex; flex-direction: column; justify-content: center; gap: 18px;">
+            <div style="font-weight: 700; letter-spacing: 0.4px; font-size: 20px; display: flex; align-items: center; gap: 12px;">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(255,255,255,0.18); display: grid; place-items: center; font-weight: 700;">📦</div>
+                Asset Management
+            </div>
+            <h1 style="font-size: 26px; margin: 0;">Welcome back</h1>
+            <p style="margin: 0; opacity: 0.95;">Quick and secure login for your Asset Management System. Clean, responsive layout.</p>
+            <div style="margin-top: auto; font-size: 13px; opacity: 0.95;">New here? Switch to Register from the tab on the right.</div>
+        </div>
         """, unsafe_allow_html=True)
+    
+    with col2:
+        # Tabs
+        tab1, tab2 = st.tabs(["Login", "Register"])
         
-        with st.form("register_form"):
-            st.markdown('<div class="input-group">', unsafe_allow_html=True)
-            reg_username = st.text_input("USERNAME", placeholder="Enter your username", key="reg_username")
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            st.markdown('<div class="input-group">', unsafe_allow_html=True)
-            reg_email = st.text_input("EMAIL", placeholder="your@email.com", key="reg_email")
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            st.markdown('<div class="input-group">', unsafe_allow_html=True)
-            reg_password = st.text_input("PASSWORD", type="password", placeholder="••••••••", key="reg_password")
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            st.markdown('<div class="input-group">', unsafe_allow_html=True)
-            reg_confirm = st.text_input("CONFIRM PASSWORD", type="password", placeholder="••••••••", key="reg_confirm")
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            st.markdown('<div class="input-group">', unsafe_allow_html=True)
-            reg_role = st.selectbox("ROLE", ["user", "admin"], key="reg_role")
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            submit_reg = st.form_submit_button("SIGN UP", use_container_width=True)
-            
-            if submit_reg:
-                if reg_password != reg_confirm:
-                    st.error("Passwords do not match")
-                elif reg_username and reg_email and reg_password:
+        with tab1:
+            with st.form("login_form", clear_on_submit=False):
+                st.markdown('<div class="field">', unsafe_allow_html=True)
+                username = st.text_input("Email", placeholder="you@domain.com", key="login_username")
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+                st.markdown('<div class="field">', unsafe_allow_html=True)
+                password = st.text_input("Password", type="password", placeholder="Your password", key="login_password")
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+                col_remember, col_submit = st.columns([1, 1])
+                with col_remember:
+                    remember = st.checkbox("Remember me", key="remember")
+                with col_submit:
+                    submit = st.form_submit_button("Sign in", use_container_width=True, type="primary")
+                
+                if submit:
                     db = get_db()
                     if db:
                         users = db.get_all('Users')
-                        existing = next((u for u in users if u.get('Username') == reg_username), None)
-                        if existing:
-                            st.error("Username already exists")
+                        user = next((u for u in users if u.get('Username') == username), None)
+                        
+                        if user and check_password(password, user.get('Password', '')):
+                            st.session_state.authenticated = True
+                            st.session_state.user_id = username
+                            st.session_state.role = user.get('Role', 'user')
+                            st.session_state.db = db
+                            st.success("Login successful!")
+                            st.rerun()
                         else:
-                            user_data = {
-                                'Username': reg_username,
-                                'Email': reg_email,
-                                'Password': hash_password(reg_password),
-                                'Role': reg_role
-                            }
-                            if db.insert('Users', user_data):
-                                st.success("Registration successful! Please login.")
-                                st.session_state.show_register = False
-                                st.rerun()
-                            else:
-                                st.error("Registration failed")
+                            st.error("Invalid username or password")
                     else:
                         st.error("Database connection failed")
-                else:
-                    st.error("Please fill in all fields")
+                
+                # Social login
+                st.markdown("""
+                <div style="display: flex; align-items: center; gap: 12px; margin: 18px 0;">
+                    <span style="height: 1px; background: #eef2ff; flex: 1;"></span>
+                    <div style="font-size: 13px; color: #6b7280; text-align: center;">or continue with</div>
+                    <span style="height: 1px; background: #eef2ff; flex: 1;"></span>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button style="flex: 1; padding: 10px; border-radius: 10px; border: 1px solid #eef2ff; background: white; cursor: pointer;">Google</button>
+                    <button style="flex: 1; padding: 10px; border-radius: 10px; border: 1px solid #eef2ff; background: white; cursor: pointer;">GitHub</button>
+                </div>
+                <p style="margin-top: 18px; font-size: 13px; color: #6b7280;">Forgot password? <a href="#" style="color: #5b6fff; text-decoration: none; font-weight: 500;">Reset</a></p>
+                """, unsafe_allow_html=True)
         
-        # Divider and social login (same as login page)
-        st.markdown("""
-        <div class="divider">OR</div>
-        <div class="social-login">
-            <div class="social-btn">G</div>
-            <div class="social-btn">F</div>
-            <div class="social-btn">X</div>
-        </div>
-        <div class="footer">
-            Already have an account? <a href="#" id="login-link">Sign in</a>
-        </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Hidden button to go back to login
-        if st.button("Login", key="back_to_login", type="secondary", help="Click to login"):
-            st.session_state.show_register = False
-            st.rerun()
-        
-        # JavaScript to trigger login from link
-        st.markdown("""
-        <script>
-            document.getElementById('login-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector('button[data-testid="baseButton-secondary"]').click();
-            });
-        </script>
-        """, unsafe_allow_html=True)
+        with tab2:
+            with st.form("register_form"):
+                col_first, col_last = st.columns(2)
+                with col_first:
+                    reg_first = st.text_input("First name", placeholder="First name", key="reg_first")
+                with col_last:
+                    reg_last = st.text_input("Last name", placeholder="Last name", key="reg_last")
+                
+                reg_email = st.text_input("Email", placeholder="you@domain.com", key="reg_email")
+                reg_phone = st.text_input("Phone (optional)", placeholder="+91 98765 43210", key="reg_phone")
+                reg_password = st.text_input("Password", type="password", placeholder="Create a password", key="reg_password")
+                
+                col_terms, col_submit_reg = st.columns([1.5, 1])
+                with col_terms:
+                    st.markdown('<div class="muted">By registering you agree to our <a href="#">Terms</a>.</div>', unsafe_allow_html=True)
+                with col_submit_reg:
+                    submit_reg = st.form_submit_button("Create account", use_container_width=True, type="primary")
+                
+                if submit_reg:
+                    reg_username = f"{reg_first}_{reg_last}".lower().replace(" ", "")
+                    if reg_first and reg_last and reg_email and reg_password:
+                        db = get_db()
+                        if db:
+                            users = db.get_all('Users')
+                            existing = next((u for u in users if u.get('Username') == reg_username or u.get('Email') == reg_email), None)
+                            if existing:
+                                st.error("Username or email already exists")
+                            else:
+                                user_data = {
+                                    'Username': reg_username,
+                                    'Email': reg_email,
+                                    'Password': hash_password(reg_password),
+                                    'Role': 'user'
+                                }
+                                if db.insert('Users', user_data):
+                                    st.success("Registration successful! Please login.")
+                                    st.rerun()
+                                else:
+                                    st.error("Registration failed")
+                        else:
+                            st.error("Database connection failed")
+                    else:
+                        st.error("Please fill in all required fields")
+    
+    # Add CSS for form styling
+    st.markdown("""
+    <style>
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .stTabs [data-baseweb="tab"] {
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+        .stTabs [data-baseweb="tab"]:hover {
+            background: rgba(91,111,255,0.08);
+        }
+        .stTabs [aria-selected="true"] {
+            background: linear-gradient(90deg, rgba(91,111,255,0.12), rgba(125,211,252,0.1));
+            color: #5b6fff;
+        }
+        .stTextInput>div>div>input {
+            padding: 12px 14px !important;
+            border-radius: 10px !important;
+            border: 1px solid #e6e9f2 !important;
+            font-size: 15px !important;
+            transition: box-shadow .12s, border-color .12s !important;
+        }
+        .stTextInput>div>div>input:focus {
+            border-color: #5b6fff !important;
+            box-shadow: 0 6px 18px rgba(91,111,255,0.12) !important;
+        }
+        .stTextInput label {
+            font-size: 13px !important;
+            color: #6b7280 !important;
+            font-weight: 500 !important;
+        }
+        .stButton>button {
+            border-radius: 10px !important;
+            font-weight: 700 !important;
+            font-size: 15px !important;
+            transition: all 0.2s !important;
+        }
+        .stButton>button[type="primary"] {
+            background: linear-gradient(90deg, #5b6fff, #7b8dff) !important;
+            box-shadow: 0 8px 22px rgba(91,111,255,0.18) !important;
+        }
+        .stButton>button[type="primary"]:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 10px 28px rgba(91,111,255,0.25) !important;
+        }
+    </style>
+    """, unsafe_allow_html=True)
 
 # Main app
 def main():
