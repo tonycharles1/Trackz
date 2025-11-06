@@ -279,11 +279,25 @@ st.markdown("""
         border: 2px solid #e2e8f0 !important;
         padding: 0.75rem 1rem !important;
         transition: all 0.2s ease !important;
+        font-size: 1rem !important;
     }
     
     .stTextInput>div>div>input:focus {
         border-color: #ff6b35 !important;
         box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1) !important;
+        outline: none !important;
+    }
+    
+    .stTextInput>div>div>input::placeholder {
+        color: #94a3b8 !important;
+    }
+    
+    /* Input labels */
+    .stTextInput label {
+        font-weight: 600 !important;
+        color: #1e293b !important;
+        font-size: 0.9rem !important;
+        margin-bottom: 0.5rem !important;
     }
     
     /* Selectbox */
@@ -674,17 +688,44 @@ def check_password(password: str, password_hash: str) -> bool:
     return hash_password(password) == password_hash
 
 def login_page():
-    """Login page"""
-    st.title("Asset Management System")
-    st.markdown('<p class="sub-header">Please login to continue</p>', unsafe_allow_html=True)
+    """Login page - Modern design"""
+    # Header with logo and buttons
+    st.markdown("""
+    <div style="background: white; padding: 1rem 2rem; margin: -1rem -1rem 2rem -1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">📦</div>
+            <h2 style="margin: 0; color: #1e293b; font-weight: 700; font-size: 1.5rem;">Asset Management</h2>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <button style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem 1rem; color: #1e293b; cursor: pointer; font-weight: 500; font-size: 0.9rem;">Login</button>
+            <button style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); border: none; border-radius: 8px; padding: 0.5rem 1rem; color: white; cursor: pointer; font-weight: 600; font-size: 0.9rem;">Get started</button>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
     
-    tab1, tab2 = st.tabs(["Login", "Register"])
-    
-    with tab1:
-        with st.form("login_form"):
-            username = st.text_input("Username")
-            password = st.text_input("Password", type="password")
-            submit = st.form_submit_button("Login", use_container_width=True)
+    # Main content area - Centered login form
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        # Title and subtitle
+        st.markdown("""
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h1 style="font-size: 2.5rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">Login</h1>
+            <p style="font-size: 1rem; color: #64748b; margin: 0;">Sign in to access your asset management system</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Login form card
+        with st.form("login_form", clear_on_submit=False):
+            st.markdown("""
+            <div style="background: white; padding: 2.5rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+            """, unsafe_allow_html=True)
+            
+            username = st.text_input("Username", placeholder="Enter your username", key="login_username")
+            password = st.text_input("Password", type="password", placeholder="Enter your password", key="login_password")
+            
+            submit = st.form_submit_button("Login", use_container_width=True, type="primary")
+            
+            st.markdown("</div>", unsafe_allow_html=True)
             
             if submit:
                 db = get_db()
@@ -703,39 +744,66 @@ def login_page():
                         st.error("Invalid username or password")
                 else:
                     st.error("Database connection failed")
-    
-    with tab2:
-        with st.form("register_form"):
-            reg_username = st.text_input("Username", key="reg_username")
-            reg_email = st.text_input("Email", key="reg_email")
-            reg_password = st.text_input("Password", type="password", key="reg_password")
-            reg_confirm = st.text_input("Confirm Password", type="password", key="reg_confirm")
-            reg_role = st.selectbox("Role", ["user", "admin"], key="reg_role")
-            submit_reg = st.form_submit_button("Register", use_container_width=True)
-            
-            if submit_reg:
-                if reg_password != reg_confirm:
-                    st.error("Passwords do not match")
-                elif reg_username and reg_email and reg_password:
-                    db = get_db()
-                    if db:
-                        users = db.get_all('Users')
-                        existing = next((u for u in users if u.get('Username') == reg_username), None)
-                        if existing:
-                            st.error("Username already exists")
+        
+        # Register link with button functionality
+        col_reg1, col_reg2, col_reg3 = st.columns([1, 1, 1])
+        with col_reg2:
+            if st.button("Register here", use_container_width=True, key="show_register_btn"):
+                st.session_state.show_register = True
+                st.rerun()
+        
+        st.markdown("""
+        <div style="text-align: center; margin-top: 1rem;">
+            <p style="color: #64748b; font-size: 0.9rem; margin: 0;">
+                Don't have an account? 
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Registration form (shown when Register button clicked)
+        if st.session_state.get('show_register', False):
+            with st.expander("Register New Account", expanded=True):
+                with st.form("register_form"):
+                    reg_username = st.text_input("Username", key="reg_username")
+                    reg_email = st.text_input("Email", key="reg_email")
+                    reg_password = st.text_input("Password", type="password", key="reg_password")
+                    reg_confirm = st.text_input("Confirm Password", type="password", key="reg_confirm")
+                    reg_role = st.selectbox("Role", ["user", "admin"], key="reg_role")
+                    submit_reg = st.form_submit_button("Register", use_container_width=True)
+                    
+                    if submit_reg:
+                        if reg_password != reg_confirm:
+                            st.error("Passwords do not match")
+                        elif reg_username and reg_email and reg_password:
+                            db = get_db()
+                            if db:
+                                users = db.get_all('Users')
+                                existing = next((u for u in users if u.get('Username') == reg_username), None)
+                                if existing:
+                                    st.error("Username already exists")
+                                else:
+                                    user_data = {
+                                        'Username': reg_username,
+                                        'Email': reg_email,
+                                        'Password': hash_password(reg_password),
+                                        'Role': reg_role
+                                    }
+                                    if db.insert('Users', user_data):
+                                        st.success("Registration successful! Please login.")
+                                        st.session_state.show_register = False
+                                    else:
+                                        st.error("Registration failed")
                         else:
-                            user_data = {
-                                'Username': reg_username,
-                                'Email': reg_email,
-                                'Password': hash_password(reg_password),
-                                'Role': reg_role
-                            }
-                            if db.insert('Users', user_data):
-                                st.success("Registration successful! Please login.")
-                            else:
-                                st.error("Registration failed")
-                else:
-                    st.error("Please fill in all fields")
+                            st.error("Please fill in all fields")
+        
+        # Footer
+        st.markdown("""
+        <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+            <p style="color: #94a3b8; font-size: 0.875rem; margin: 0;">
+                Powered by : <span style="color: #ff6b35; font-weight: 600;">Trackz Solutions and Technologies</span>
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # Main app
 def main():
