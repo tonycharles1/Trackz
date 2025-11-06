@@ -116,13 +116,24 @@ def show(db, role):
 
 def add_asset_form(db):
     """Add asset form"""
-    # File uploaders outside form (cannot be inside forms in some Streamlit versions)
+    # Store file uploaders in session state (outside form)
+    if 'asset_image_file' not in st.session_state:
+        st.session_state.asset_image_file = None
+    if 'asset_document_file' not in st.session_state:
+        st.session_state.asset_document_file = None
+    
+    # File uploaders outside form
     col1, col2 = st.columns(2)
     with col1:
         image_file = st.file_uploader("Image Attachment", type=['png', 'jpg', 'jpeg', 'gif', 'webp'], key="asset_image_upload")
+        if image_file:
+            st.session_state.asset_image_file = image_file
     with col2:
         document_file = st.file_uploader("Document Attachment", type=['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'], key="asset_doc_upload")
+        if document_file:
+            st.session_state.asset_document_file = document_file
     
+    # Form with all input fields
     with st.form("add_asset_form", clear_on_submit=True):
         col1, col2 = st.columns(2)
         
@@ -151,6 +162,7 @@ def add_asset_form(db):
             status_options = ["", "Active", "Inactive", "Under Maintenance", "Disposed", "Sold", "Lost"]
             asset_status = st.selectbox("Asset Status", status_options, key="asset_status_select")
         
+        # Submit button MUST be inside the form
         submitted = st.form_submit_button("💾 Save Asset", use_container_width=True)
         
         if submitted:
@@ -159,15 +171,14 @@ def add_asset_form(db):
                 timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
                 asset_code = f"AST-{timestamp}"
                 
-                # Handle file uploads (note: Streamlit file uploads need special handling)
-                # For now, we'll store file metadata - actual file storage would need cloud storage
+                # Handle file uploads from session state
                 image_filename = ''
-                if image_file:
-                    image_filename = f"{asset_code}_{image_file.name}"
+                if st.session_state.asset_image_file:
+                    image_filename = f"{asset_code}_{st.session_state.asset_image_file.name}"
                 
                 document_filename = ''
-                if document_file:
-                    document_filename = f"{asset_code}_{document_file.name}"
+                if st.session_state.asset_document_file:
+                    document_filename = f"{asset_code}_{st.session_state.asset_document_file.name}"
                 
                 asset_data = {
                     'Asset Code': asset_code,
