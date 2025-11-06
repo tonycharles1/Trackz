@@ -1177,24 +1177,37 @@ def login_page():
     # Add CSS for form styling
     st.markdown("""
     <style>
+        /* Style tabs to look like navigation tabs */
         .stTabs [data-baseweb="tab-list"] {
-            gap: 8px;
-            margin-bottom: 14px;
+            gap: 8px !important;
+            margin-bottom: 20px !important;
+            border-bottom: none !important;
         }
         .stTabs [data-baseweb="tab"] {
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-weight: 600;
-            color: #6b7280;
-            transition: all 0.2s;
+            padding: 10px 14px !important;
+            border-radius: 12px !important;
+            font-weight: 600 !important;
+            color: #6b7280 !important;
+            transition: all 0.2s !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
         }
         .stTabs [data-baseweb="tab"]:hover {
-            background: rgba(91,111,255,0.08);
+            background: rgba(91,111,255,0.08) !important;
         }
         .stTabs [aria-selected="true"] {
-            background: linear-gradient(90deg, rgba(91,111,255,0.12), rgba(125,211,252,0.1));
-            color: #5b6fff;
+            background: transparent !important;
+            color: #5b6fff !important;
+            border-bottom: 2px solid #5b6fff !important;
+            border-radius: 0 !important;
+            padding-bottom: 8px !important;
         }
+        .stTabs [aria-selected="false"] {
+            border-bottom: 2px solid transparent !important;
+        }
+        
+        /* Style form inputs */
         .stTextInput>div>div>input {
             padding: 12px 14px !important;
             border-radius: 10px !important;
@@ -1211,19 +1224,32 @@ def login_page():
             color: #6b7280 !important;
             font-weight: 500 !important;
         }
-        .stButton>button {
+        
+        /* Style form submit buttons - ensure they're inside forms */
+        .stForm .stButton>button {
             border-radius: 10px !important;
             font-weight: 700 !important;
             font-size: 15px !important;
             transition: all 0.2s !important;
         }
-        .stButton>button[type="primary"] {
+        .stForm .stButton>button[type="primary"] {
             background: linear-gradient(90deg, #5b6fff, #7b8dff) !important;
             box-shadow: 0 8px 22px rgba(91,111,255,0.18) !important;
+            color: white !important;
         }
-        .stButton>button[type="primary"]:hover {
+        .stForm .stButton>button[type="primary"]:hover {
             transform: translateY(-1px) !important;
             box-shadow: 0 10px 28px rgba(91,111,255,0.25) !important;
+        }
+        
+        /* Hide any buttons outside forms */
+        .stTabs ~ .stButton {
+            display: none !important;
+        }
+        
+        /* Ensure form container styling */
+        .stTabs {
+            margin-top: 0 !important;
         }
     </style>
     """, unsafe_allow_html=True)
