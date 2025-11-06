@@ -1185,44 +1185,28 @@ def main():
         </div>
         """, unsafe_allow_html=True)
         
-        # Navigation menu with icons (using emojis for better visibility)
+        # Navigation menu - Plain text only (no icons to avoid rendering issues)
         menu_items = [
-            ("📊", "Dashboard"),
-            ("📦", "Assets"),
-            ("📍", "Locations"),
-            ("🏷️", "Categories"),
-            ("🏷️", "Subcategories"),
-            ("📋", "Asset Types"),
-            ("⭐", "Brands"),
-            ("↔️", "Asset Movements"),
-            ("🧮", "Depreciation"),
-            ("📄", "Asset Report"),
-            ("📈", "Movement Report"),
-            ("📝", "Logs")
+            "Dashboard",
+            "Assets",
+            "Locations",
+            "Categories",
+            "Subcategories",
+            "Asset Types",
+            "Brands",
+            "Asset Movements",
+            "Depreciation",
+            "Asset Report",
+            "Movement Report",
+            "Logs"
         ]
         
-        # Create custom radio buttons with icons - ensure icons display
-        page_options = []
-        for icon, name in menu_items:
-            # Use HTML to ensure icon displays properly
-            page_options.append(f"{icon} {name}")
-        
+        # Create radio buttons - simple text only
         page = st.radio(
             "Navigation",
-            page_options,
-            label_visibility="collapsed",
-            format_func=lambda x: x
+            menu_items,
+            label_visibility="collapsed"
         )
-        
-        # Extract page name from selection (remove icon)
-        if " " in page:
-            page = page.split(" ", 1)[1]
-        else:
-            # Fallback: match by removing emoji
-            for icon, name in menu_items:
-                if name in page:
-                    page = name
-                    break
     
     # Route to appropriate page
     try:
