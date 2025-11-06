@@ -25,58 +25,116 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
-st.markdown("""
-<style>
-    @font-face {
-        font-family: 'DIN';
-        src: local('DIN'), local('DIN-Regular'), local('FF DIN'), local('FF-DIN-Regular');
-        font-weight: 400;
-        font-style: normal;
-    }
+# Custom CSS - Using components for better compatibility
+try:
+    import streamlit.components.v1 as components
     
-    * {
-        font-family: 'DIN', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    
-    .main-header {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #2d3748;
-        margin-bottom: 0.5rem;
-    }
-    
-    .sub-header {
-        color: #718096;
-        font-size: 1rem;
-        margin-bottom: 2rem;
-    }
-    
-    .stButton>button {
-        background-color: #ff6b35;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.5rem 1.5rem;
-        font-weight: 600;
-        transition: all 0.2s;
-    }
-    
-    .stButton>button:hover {
-        background-color: #e55a2b;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
-    }
-    
-    .metric-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        text-align: center;
-    }
-</style>
-""", unsafe_allow_html=True)
+    # Inject CSS using components.html for better Streamlit Cloud compatibility
+    components.html("""
+    <style>
+        @font-face {
+            font-family: 'DIN';
+            src: local('DIN'), local('DIN-Regular'), local('FF DIN'), local('FF-DIN-Regular');
+            font-weight: 400;
+            font-style: normal;
+        }
+        
+        * {
+            font-family: 'DIN', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .main-header {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .sub-header {
+            color: #718096;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stButton>button {
+            background-color: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .stButton>button:hover {
+            background-color: #e55a2b;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+        
+        .metric-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+    </style>
+    <script>console.log('CSS loaded');</script>
+    """, height=0)
+except:
+    # Fallback to markdown if components fail
+    st.markdown("""
+    <style>
+        @font-face {
+            font-family: 'DIN';
+            src: local('DIN'), local('DIN-Regular'), local('FF DIN'), local('FF-DIN-Regular');
+            font-weight: 400;
+            font-style: normal;
+        }
+        
+        * {
+            font-family: 'DIN', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .main-header {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .sub-header {
+            color: #718096;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stButton>button {
+            background-color: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .stButton>button:hover {
+            background-color: #e55a2b;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+        
+        .metric-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+    </style>
+    """, unsafe_allow_html=True)
 
 # Initialize session state
 if 'authenticated' not in st.session_state:

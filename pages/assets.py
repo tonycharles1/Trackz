@@ -3,6 +3,18 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import os
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+try:
+    import barcode
+    from barcode.writer import ImageWriter
+    BARCODE_AVAILABLE = True
+except ImportError:
+    BARCODE_AVAILABLE = False
 
 def show(db, role):
     """Display assets page"""
@@ -32,6 +44,42 @@ def show(db, role):
     
     # Display assets table
     if assets:
+        # Barcode printing section
+        st.markdown("---")
+        st.markdown("### 🏷️ Print Barcodes")
+        
+        # Create selection checkboxes
+        selected_assets = []
+        cols = st.columns(min(4, len(assets)))
+        for idx, asset in enumerate(assets):
+            col_idx = idx % len(cols)
+            with cols[col_idx]:
+                asset_code = asset.get('Asset Code', '')
+                item_name = asset.get('Item Name', '')
+                if st.checkbox(
+                    f"{asset_code}",
+                    key=f"select_{asset_code}",
+                    help=f"{item_name}"
+                ):
+                    selected_assets.append(asset)
+        
+        # Print button
+        if selected_assets:
+            col1, col2 = st.columns([1, 3])
+            with col1:
+                if st.button("🖨️ Print Selected Barcodes", type="primary", use_container_width=True):
+                    pdf_buffer = generate_barcode_pdf(selected_assets)
+                    if pdf_buffer:
+                        st.download_button(
+                            label="📥 Download Barcode PDF",
+                            data=pdf_buffer,
+                            file_name=f"barcodes_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                            mime="application/pdf",
+                            use_container_width=True
+                        )
+        
+        st.markdown("---")
+        
         df = pd.DataFrame(assets)
         # Select relevant columns for display
         display_cols = ['Asset Code', 'Item Name', 'Asset Category', 'Location', 'Amount', 'Asset Status']
@@ -42,11 +90,22 @@ def show(db, role):
         st.markdown("### Asset Actions")
         for asset in assets:
             with st.expander(f"🔧 {asset.get('Asset Code', '')} - {asset.get('Item Name', '')}"):
-                col1, col2 = st.columns(2)
+                col1, col2, col3 = st.columns(3)
                 with col1:
                     if st.button(f"✏️ Edit", key=f"edit_{asset.get('Asset Code')}"):
                         st.session_state[f"edit_{asset.get('Asset Code')}"] = True
                 with col2:
+                    if st.button(f"🖨️ Print Barcode", key=f"print_{asset.get('Asset Code')}"):
+                        pdf_buffer = generate_barcode_pdf([asset])
+                        if pdf_buffer:
+                            st.download_button(
+                                label="📥 Download Barcode",
+                                data=pdf_buffer,
+                                file_name=f"barcode_{asset.get('Asset Code', '')}.pdf",
+                                mime="application/pdf",
+                                key=f"dl_{asset.get('Asset Code')}"
+                            )
+                with col3:
                     if role == 'admin':
                         if st.button(f"🗑️ Delete", key=f"delete_{asset.get('Asset Code')}"):
                             if db.delete('Assets', 'Asset Code', asset.get('Asset Code')):
@@ -135,4 +194,69 @@ def add_asset_form(db):
                     st.error("Failed to add asset")
             else:
                 st.error("Please fill in required fields (Item Name and Category)")
+
+def generate_barcode_pdf(assets):
+    """Generate PDF with barcodes for selected assets"""
+    if not BARCODE_AVAILABLE:
+        st.error("Barcode library not available. Please install: pip install python-barcode")
+        return None
+    
+    try:
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=0.5*inch, bottomMargin=0.5*inch)
+        story = []
+        styles = getSampleStyleSheet()
+        
+        # Title
+        title = Paragraph("Asset Barcodes", styles['Title'])
+        story.append(title)
+        story.append(Spacer(1, 0.3*inch))
+        
+        # Create barcode images and add to PDF
+        for asset in assets:
+            asset_code = asset.get('Asset Code', '')
+            item_name = asset.get('Item Name', '')
+            location = asset.get('Location', '')
+            
+            if not asset_code:
+                continue
+            
+            # Generate barcode
+            try:
+                code128 = barcode.get_barcode_class('code128')
+                barcode_instance = code128(asset_code, writer=ImageWriter())
+                barcode_buffer = BytesIO()
+                barcode_instance.write(barcode_buffer)
+                barcode_buffer.seek(0)
+                
+                # Create barcode image
+                barcode_img = Image(barcode_buffer, width=3*inch, height=0.8*inch)
+                
+                # Asset information
+                info_text = f"<b>{item_name}</b><br/>Code: {asset_code}"
+                if location:
+                    info_text += f"<br/>Location: {location}"
+                info_para = Paragraph(info_text, styles['Normal'])
+                
+                # Add to story
+                story.append(info_para)
+                story.append(Spacer(1, 0.1*inch))
+                story.append(barcode_img)
+                story.append(Spacer(1, 0.3*inch))
+                
+            except Exception as e:
+                # If barcode generation fails, add text instead
+                error_text = f"<b>{item_name}</b><br/>Code: {asset_code}<br/><i>Barcode generation failed: {str(e)}</i>"
+                error_para = Paragraph(error_text, styles['Normal'])
+                story.append(error_para)
+                story.append(Spacer(1, 0.3*inch))
+        
+        # Build PDF
+        doc.build(story)
+        buffer.seek(0)
+        return buffer.getvalue()
+        
+    except Exception as e:
+        st.error(f"Error generating PDF: {str(e)}")
+        return None
 
