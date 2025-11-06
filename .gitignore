@@ -25,7 +25,7 @@ credentials.json
 .env
 *.log
 
-# Streamlit secrets
+# Streamlit secrets (keep structure but ignore actual secrets)
 .streamlit/secrets.toml
 
 # Upload directories
@@ -40,9 +40,18 @@ uploads/
 *.docx
 *.xls
 *.xlsx
-# Documentation files (keep .txt files that are documentation)
-# *.txt
+
 # Specific files to ignore
 QUICK_FIX_CHECKLIST.txt
 packages.txt
 
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
