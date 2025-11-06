@@ -900,146 +900,258 @@ def check_password(password: str, password_hash: str) -> bool:
     return hash_password(password) == password_hash
 
 def login_page():
-    """Login page - Modern design"""
-    # Header with logo and buttons
+    """Login page - Glassmorphism design"""
+    # Inject glassmorphism CSS
     st.markdown("""
-    <div style="background: white; padding: 1rem 2rem; margin: -1rem -1rem 2rem -1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">📦</div>
-            <h2 style="margin: 0; color: #1e293b; font-weight: 700; font-size: 1.5rem;">Asset Management</h2>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        .stApp {
+            background-color: #080710 !important;
+            background: #080710 !important;
+        }
+        
+        .glassmorphism-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .background {
+            width: 430px;
+            height: 520px;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            left: 50%;
+            top: 50%;
+            z-index: 1;
+        }
+        
+        .background .shape {
+            height: 200px;
+            width: 200px;
+            position: absolute;
+            border-radius: 50%;
+        }
+        
+        .shape:first-child {
+            background: linear-gradient(#1845ad, #23a2f6);
+            left: -80px;
+            top: -80px;
+        }
+        
+        .shape:last-child {
+            background: linear-gradient(to right, #ff512f, #f09819);
+            right: -30px;
+            bottom: -80px;
+        }
+        
+        .glass-form {
+            height: 520px;
+            width: 400px;
+            background-color: rgba(255,255,255,0.13);
+            position: relative;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 40px rgba(8,7,16,0.6);
+            padding: 50px 35px;
+            z-index: 2;
+        }
+        
+        .glass-form * {
+            font-family: 'Poppins', sans-serif !important;
+            color: #ffffff !important;
+            letter-spacing: 0.5px;
+            outline: none;
+            border: none;
+        }
+        
+        .glass-form h3 {
+            font-size: 32px;
+            font-weight: 500;
+            line-height: 42px;
+            text-align: center;
+            color: #ffffff !important;
+            margin-bottom: 20px;
+        }
+        
+        .glass-form label {
+            display: block;
+            margin-top: 30px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff !important;
+        }
+        
+        .glass-form input {
+            display: block;
+            height: 50px;
+            width: 100%;
+            background-color: rgba(255,255,255,0.07);
+            border-radius: 3px;
+            padding: 0 10px;
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 300;
+            color: #ffffff !important;
+        }
+        
+        .glass-form input::placeholder {
+            color: #e5e5e5 !important;
+        }
+        
+        .glass-form button {
+            margin-top: 50px;
+            width: 100%;
+            background-color: #ffffff;
+            color: #080710;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #ffffff !important;
+        }
+        
+        .register-link a {
+            color: #ffffff !important;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        
+        /* Hide Streamlit default elements */
+        .main .block-container {
+            padding: 0 !important;
+            max-width: 100% !important;
+        }
+        
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        header {visibility: hidden;}
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Glassmorphism login form
+    st.markdown("""
+    <div class="glassmorphism-container">
+        <div class="background">
+            <div class="shape"></div>
+            <div class="shape"></div>
         </div>
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <button style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem 1rem; color: #1e293b; cursor: pointer; font-weight: 500; font-size: 0.9rem;">Login</button>
-            <button style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); border: none; border-radius: 8px; padding: 0.5rem 1rem; color: white; cursor: pointer; font-weight: 600; font-size: 0.9rem;">Get started</button>
-        </div>
+        <div class="glass-form">
+            <h3>Login Here</h3>
+    """, unsafe_allow_html=True)
+    
+    # Login form
+    with st.form("login_form", clear_on_submit=False):
+        username = st.text_input("Username", placeholder="Email or Phone", key="login_username")
+        password = st.text_input("Password", type="password", placeholder="Password", key="login_password")
+        
+        submit = st.form_submit_button("Log In", use_container_width=True)
+        
+        if submit:
+            db = get_db()
+            if db:
+                users = db.get_all('Users')
+                user = next((u for u in users if u.get('Username') == username), None)
+                
+                if user and check_password(password, user.get('Password', '')):
+                    st.session_state.authenticated = True
+                    st.session_state.user_id = username
+                    st.session_state.role = user.get('Role', 'user')
+                    st.session_state.db = db
+                    st.success("Login successful!")
+                    st.rerun()
+                else:
+                    st.error("Invalid username or password")
+            else:
+                st.error("Database connection failed")
+    
+    # Register link
+    st.markdown("""
+    <div class="register-link">
+        <p>Don't have an account? <a href="#" onclick="event.preventDefault(); document.querySelector('[data-testid=\\'baseButton-secondary\\']').click();">Register here</a></p>
     </div>
     """, unsafe_allow_html=True)
     
-    # Main content area - Centered login form
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        # Title and subtitle
-        st.markdown("""
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h1 style="font-size: 2.5rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">Login</h1>
-            <p style="font-size: 1rem; color: #64748b; margin: 0;">Sign in to access your asset management system</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Login form card
-        with st.form("login_form", clear_on_submit=False):
-            st.markdown("""
-            <div style="background: white; padding: 2.5rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
-            """, unsafe_allow_html=True)
-            
-            username = st.text_input("Username", placeholder="Enter your username", key="login_username")
-            password = st.text_input("Password", type="password", placeholder="Enter your password", key="login_password")
-            
-            submit = st.form_submit_button("Login", use_container_width=True, type="primary")
-            
-            st.markdown("</div>", unsafe_allow_html=True)
-            
-            if submit:
-                db = get_db()
-                if db:
-                    users = db.get_all('Users')
-                    user = next((u for u in users if u.get('Username') == username), None)
-                    
-                    if user and check_password(password, user.get('Password', '')):
-                        st.session_state.authenticated = True
-                        st.session_state.user_id = username
-                        st.session_state.role = user.get('Role', 'user')
-                        st.session_state.db = db
-                        st.success("Login successful!")
-                        st.rerun()
-                    else:
-                        st.error("Invalid username or password")
-                else:
-                    st.error("Database connection failed")
+    # Toggle to registration
+    if st.button("Show Register", key="toggle_register", type="secondary"):
+        st.session_state.show_register = True
+        st.rerun()
     
-        # Register link - Using Streamlit button styled as link
+    st.markdown("</div></div>", unsafe_allow_html=True)
+    
+    # Registration form (glassmorphism style)
+    if st.session_state.get('show_register', False):
         st.markdown("""
-        <div style="text-align: center; margin-top: 1.5rem;">
-            <p style="color: #64748b; font-size: 0.9rem; margin: 0;">
-                Don't have an account? 
-            </p>
-        </div>
+        <div class="glassmorphism-container">
+            <div class="background">
+                <div class="shape"></div>
+                <div class="shape"></div>
+            </div>
+            <div class="glass-form">
+                <h3>Register Here</h3>
         """, unsafe_allow_html=True)
         
-        # Register button styled as link
-        col_reg1, col_reg2, col_reg3 = st.columns([1, 1, 1])
-        with col_reg2:
-            if st.button("Register here", use_container_width=False, key="show_register_btn", help="Click to register"):
-                st.session_state.show_register = True
-                st.rerun()
-        
-        # Style the register button as a link
-        st.markdown("""
-        <style>
-            button[key="show_register_btn"] {
-                background: transparent !important;
-                border: none !important;
-                color: #ff6b35 !important;
-                font-weight: 600 !important;
-                box-shadow: none !important;
-                padding: 0 !important;
-                text-decoration: underline !important;
-            }
-            button[key="show_register_btn"]:hover {
-                background: transparent !important;
-                color: #f7931e !important;
-                transform: none !important;
-            }
-        </style>
-        """, unsafe_allow_html=True)
-        
-        # Registration form (shown when Register link clicked)
-        if st.session_state.get('show_register', False):
-            st.markdown("---")
-            st.markdown("### Register New Account")
-            with st.form("register_form"):
-                reg_username = st.text_input("Username", placeholder="Enter your username", key="reg_username")
-                reg_email = st.text_input("Email", placeholder="Enter your email", key="reg_email")
-                reg_password = st.text_input("Password", type="password", placeholder="Enter your password", key="reg_password")
-                reg_confirm = st.text_input("Confirm Password", type="password", placeholder="Confirm your password", key="reg_confirm")
-                reg_role = st.selectbox("Role", ["user", "admin"], key="reg_role")
-                submit_reg = st.form_submit_button("Register", use_container_width=True, type="primary")
-                
-                if submit_reg:
-                    if reg_password != reg_confirm:
-                        st.error("Passwords do not match")
-                    elif reg_username and reg_email and reg_password:
-                        db = get_db()
-                        if db:
-                            users = db.get_all('Users')
-                            existing = next((u for u in users if u.get('Username') == reg_username), None)
-                            if existing:
-                                st.error("Username already exists")
-                            else:
-                                user_data = {
-                                    'Username': reg_username,
-                                    'Email': reg_email,
-                                    'Password': hash_password(reg_password),
-                                    'Role': reg_role
-                                }
-                                if db.insert('Users', user_data):
-                                    st.success("Registration successful! Please login.")
-                                    st.session_state.show_register = False
-                                    st.rerun()
-                                else:
-                                    st.error("Registration failed")
+        with st.form("register_form"):
+            reg_username = st.text_input("Username", placeholder="Enter your username", key="reg_username")
+            reg_email = st.text_input("Email", placeholder="Enter your email", key="reg_email")
+            reg_password = st.text_input("Password", type="password", placeholder="Enter your password", key="reg_password")
+            reg_confirm = st.text_input("Confirm Password", type="password", placeholder="Confirm your password", key="reg_confirm")
+            reg_role = st.selectbox("Role", ["user", "admin"], key="reg_role")
+            submit_reg = st.form_submit_button("Register", use_container_width=True)
+            
+            if submit_reg:
+                if reg_password != reg_confirm:
+                    st.error("Passwords do not match")
+                elif reg_username and reg_email and reg_password:
+                    db = get_db()
+                    if db:
+                        users = db.get_all('Users')
+                        existing = next((u for u in users if u.get('Username') == reg_username), None)
+                        if existing:
+                            st.error("Username already exists")
                         else:
-                            st.error("Database connection failed")
+                            user_data = {
+                                'Username': reg_username,
+                                'Email': reg_email,
+                                'Password': hash_password(reg_password),
+                                'Role': reg_role
+                            }
+                            if db.insert('Users', user_data):
+                                st.success("Registration successful! Please login.")
+                                st.session_state.show_register = False
+                                st.rerun()
+                            else:
+                                st.error("Registration failed")
                     else:
-                        st.error("Please fill in all fields")
+                        st.error("Database connection failed")
+                else:
+                    st.error("Please fill in all fields")
         
-        # Footer
         st.markdown("""
-        <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
-            <p style="color: #94a3b8; font-size: 0.875rem; margin: 0;">
-                Powered by : <span style="color: #ff6b35; font-weight: 600;">Trackz Solutions and Technologies</span>
-            </p>
+        <div class="register-link">
+            <p>Already have an account? <a href="#" onclick="event.preventDefault(); location.reload();">Login here</a></p>
         </div>
+        </div></div>
         """, unsafe_allow_html=True)
 
 # Main app
