@@ -92,11 +92,16 @@ st.markdown("""
         transform: translateY(0) scale(0.98) !important;
     }
     
-    /* Sidebar - Premium Design */
+    /* Top Header Bar */
+    .main .block-container {
+        padding-top: 1rem !important;
+    }
+    
+    /* Sidebar - Clean Menu Design */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+        background: #f8fafc !important;
         box-shadow: 2px 0 10px rgba(0,0,0,0.05) !important;
-        padding-top: 2rem !important;
+        padding-top: 1rem !important;
     }
     
     /* Hide Streamlit default sidebar elements */
@@ -104,7 +109,6 @@ st.markdown("""
         display: none !important;
     }
     
-    /* Hide search box and view less link */
     [data-testid="stSidebar"] button[kind="header"] {
         display: none !important;
     }
@@ -113,82 +117,78 @@ st.markdown("""
         display: none !important;
     }
     
-    /* Hide Streamlit branding */
     [data-testid="stSidebar"] [data-testid="collapsedControl"] {
         display: none !important;
     }
     
-    /* Style sidebar markdown */
-    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] {
+    /* Sidebar Menu Header */
+    [data-testid="stSidebar"] h3 {
         color: #1e293b !important;
-    }
-    
-    /* Sidebar header styling */
-    [data-testid="stSidebar"] h2 {
-        color: #1e293b !important;
-        font-weight: 800 !important;
-        font-size: 1.5rem !important;
+        font-weight: 700 !important;
+        font-size: 0.875rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
         margin-bottom: 1rem !important;
-        padding-bottom: 0.5rem !important;
-        border-bottom: 2px solid #e2e8f0 !important;
     }
     
-    /* Sidebar radio buttons - make them look like menu items */
+    /* Sidebar radio buttons - Menu items with icons */
     [data-testid="stSidebar"] [data-baseweb="radio"] {
         background: transparent !important;
+        gap: 0.5rem !important;
     }
     
     [data-testid="stSidebar"] [data-baseweb="radio"] label {
         padding: 0.75rem 1rem !important;
         margin: 0.25rem 0 !important;
-        border-radius: 10px !important;
+        border-radius: 8px !important;
         transition: all 0.2s ease !important;
         cursor: pointer !important;
         font-weight: 500 !important;
-        color: #64748b !important;
+        color: #475569 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+        background: transparent !important;
     }
     
     [data-testid="stSidebar"] [data-baseweb="radio"] label:hover {
-        background-color: #f1f5f9 !important;
+        background-color: #e2e8f0 !important;
         color: #1e293b !important;
-        transform: translateX(4px) !important;
     }
     
     [data-testid="stSidebar"] [data-baseweb="radio"] input:checked + label {
-        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%) !important;
+        background-color: #ff6b35 !important;
         color: white !important;
         font-weight: 600 !important;
-        box-shadow: 0 4px 6px rgba(255, 107, 53, 0.3) !important;
     }
     
-    /* User info styling */
-    [data-testid="stSidebar"] p {
-        margin: 0.5rem 0 !important;
-        color: #64748b !important;
-        font-size: 0.9rem !important;
-    }
-    
-    [data-testid="stSidebar"] p strong {
-        color: #1e293b !important;
-        font-weight: 600 !important;
+    [data-testid="stSidebar"] [data-baseweb="radio"] input:checked + label::before {
+        content: '' !important;
     }
     
     /* Sidebar dividers */
     [data-testid="stSidebar"] hr {
         border: none !important;
         border-top: 1px solid #e2e8f0 !important;
-        margin: 1.5rem 0 !important;
+        margin: 1rem 0 !important;
     }
     
-    /* Sidebar logout button */
-    [data-testid="stSidebar"] .stButton>button {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
-        margin-top: 1rem !important;
+    /* Main content cards */
+    .main .block-container > div {
+        background: white !important;
+        border-radius: 12px !important;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+        padding: 2rem !important;
+        margin-bottom: 1.5rem !important;
     }
     
-    [data-testid="stSidebar"] .stButton>button:hover {
-        background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%) !important;
-        box-shadow: 0 8px 20px 0 rgba(239, 68, 68, 0.5) !important;
+    /* Form styling */
+    .stForm {
+        background: white !important;
+        padding: 2rem !important;
+        border-radius: 12px !important;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+        border: none !important;
     }
     
     /* Metric Cards - Card Design */
@@ -774,7 +774,29 @@ def main():
         """)
         return  # Return early instead of st.stop()
     
-    # Sidebar navigation - Clean design
+    # Top Header Bar
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.markdown("""
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+            <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">📦</div>
+            <h2 style="margin: 0; color: #1e293b; font-weight: 700; font-size: 1.5rem;">Asset Management</h2>
+        </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown("""
+        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 1rem; margin-bottom: 1rem;">
+            <span style="color: #64748b; font-size: 0.9rem;">Welcome, <strong>{}</strong> ({})</span>
+        </div>
+        """.format(st.session_state.user_id, st.session_state.role), unsafe_allow_html=True)
+        if st.button("Logout", use_container_width=False, type="secondary"):
+            st.session_state.authenticated = False
+            st.session_state.user_id = None
+            st.session_state.role = None
+            st.session_state.db = None
+            st.rerun()
+    
+    # Sidebar navigation - Icon-based menu
     with st.sidebar:
         # Hide Streamlit default navigation
         st.markdown("""
@@ -785,34 +807,37 @@ def main():
         </style>
         """, unsafe_allow_html=True)
         
-        # Custom header
-        st.markdown("### 📦 Asset Management")
+        # Menu Header
+        st.markdown("### MENU")
         st.markdown("---")
         
-        # User info
-        st.markdown(f"**👤 {st.session_state.user_id}**")
-        st.markdown(f"*{st.session_state.role}*")
-        st.markdown("---")
+        # Navigation menu with icons
+        menu_items = [
+            ("📊", "Dashboard"),
+            ("📦", "Assets"),
+            ("📍", "Locations"),
+            ("🏷️", "Categories"),
+            ("🏷️", "Subcategories"),
+            ("📋", "Asset Types"),
+            ("⭐", "Brands"),
+            ("↔️", "Asset Movements"),
+            ("🧮", "Depreciation"),
+            ("📊", "Asset Report"),
+            ("📈", "Movement Report"),
+            ("📝", "Logs")
+        ]
         
-        # Navigation menu
-        st.markdown("#### Menu")
+        # Create custom radio buttons with icons
+        page_options = [f"{icon} {name}" for icon, name in menu_items]
         page = st.radio(
             "Navigation",
-            ["Dashboard", "Assets", "Locations", "Categories", "Subcategories", 
-             "Asset Types", "Brands", "Asset Movements", "Depreciation", 
-             "Asset Report", "Movement Report", "Logs"],
-            label_visibility="collapsed"
+            page_options,
+            label_visibility="collapsed",
+            format_func=lambda x: x
         )
         
-        st.markdown("---")
-        
-        # Logout button
-        if st.button("🚪 Logout", use_container_width=True, type="secondary"):
-            st.session_state.authenticated = False
-            st.session_state.user_id = None
-            st.session_state.role = None
-            st.session_state.db = None
-            st.rerun()
+        # Extract page name from selection
+        page = page.split(" ", 1)[1] if " " in page else page
     
     # Route to appropriate page
     try:
