@@ -1118,80 +1118,95 @@ def login_page():
             max-width: 100% !important;
         }
         
+        /* Hide secondary button visually */
+        button[data-testid="baseButton-secondary"] {
+            display: none !important;
+        }
+        
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
         header {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
     
-    # Login form container
-    st.markdown("""
-    <div class="login-container">
-        <h1>LOGIN</h1>
-    """, unsafe_allow_html=True)
-    
-    # Login form
-    with st.form("login_form", clear_on_submit=False):
-        st.markdown('<div class="input-group">', unsafe_allow_html=True)
-        username = st.text_input("EMAIL", placeholder="your@email.com", key="login_username")
-        st.markdown('</div>', unsafe_allow_html=True)
+    # Show login form only if register is NOT selected
+    if not st.session_state.get('show_register', False):
+        # Login form container
+        st.markdown("""
+        <div class="login-container">
+            <h1>LOGIN</h1>
+        """, unsafe_allow_html=True)
         
-        st.markdown('<div class="input-group">', unsafe_allow_html=True)
-        password = st.text_input("PASSWORD", type="password", placeholder="••••••••", key="login_password")
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        submit = st.form_submit_button("SIGN IN", use_container_width=True)
-        
-        if submit:
-            db = get_db()
-            if db:
-                users = db.get_all('Users')
-                user = next((u for u in users if u.get('Username') == username), None)
-                
-                if user and check_password(password, user.get('Password', '')):
-                    st.session_state.authenticated = True
-                    st.session_state.user_id = username
-                    st.session_state.role = user.get('Role', 'user')
-                    st.session_state.db = db
-                    st.success("Login successful!")
-                    st.rerun()
+        # Login form
+        with st.form("login_form", clear_on_submit=False):
+            st.markdown('<div class="input-group">', unsafe_allow_html=True)
+            username = st.text_input("EMAIL", placeholder="your@email.com", key="login_username")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            st.markdown('<div class="input-group">', unsafe_allow_html=True)
+            password = st.text_input("PASSWORD", type="password", placeholder="••••••••", key="login_password")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            submit = st.form_submit_button("SIGN IN", use_container_width=True)
+            
+            if submit:
+                db = get_db()
+                if db:
+                    users = db.get_all('Users')
+                    user = next((u for u in users if u.get('Username') == username), None)
+                    
+                    if user and check_password(password, user.get('Password', '')):
+                        st.session_state.authenticated = True
+                        st.session_state.user_id = username
+                        st.session_state.role = user.get('Role', 'user')
+                        st.session_state.db = db
+                        st.success("Login successful!")
+                        st.rerun()
+                    else:
+                        st.error("Invalid username or password")
                 else:
-                    st.error("Invalid username or password")
-            else:
-                st.error("Database connection failed")
+                    st.error("Database connection failed")
+        
+        # Divider and social login
+        st.markdown("""
+        <div class="divider">OR</div>
+        <div class="social-login">
+            <div class="social-btn">G</div>
+            <div class="social-btn">F</div>
+            <div class="social-btn">X</div>
+        </div>
+        <div class="footer">
+            Don't have an account? <a href="#" id="register-link">Sign up</a>
+        </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Hidden button to trigger registration
+        if st.button("Register", key="toggle_register", type="secondary", help="Click to register"):
+            st.session_state.show_register = True
+            st.rerun()
+        
+        # JavaScript to trigger registration
+        st.markdown("""
+        <script>
+            document.getElementById('register-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('button[data-testid="baseButton-secondary"]').click();
+            });
+        </script>
+        """, unsafe_allow_html=True)
     
-    # Divider and social login
-    st.markdown("""
-    <div class="divider">OR</div>
-    <div class="social-login">
-        <div class="social-btn">G</div>
-        <div class="social-btn">F</div>
-        <div class="social-btn">X</div>
-    </div>
-    <div class="footer">
-        Don't have an account? <a href="#" id="register-link">Sign up</a>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Hidden button to trigger registration
-    if st.button("Register", key="toggle_register", type="secondary", help="Click to register"):
-        st.session_state.show_register = True
-        st.rerun()
-    
-    # JavaScript to trigger registration
-    st.markdown("""
-    <script>
-        document.getElementById('register-link').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelector('button[data-testid="baseButton-secondary"]').click();
-        });
-    </script>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Registration form (same style)
+    # Registration form (same style) - Only show if register is selected
     if st.session_state.get('show_register', False):
+        # Hide login form when showing register
+        st.markdown("""
+        <style>
+            .login-container:first-of-type {
+                display: none !important;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+        
         st.markdown("""
         <div class="login-container">
             <h1>REGISTER</h1>
@@ -1250,9 +1265,24 @@ def login_page():
         
         st.markdown("""
         <div class="footer">
-            Already have an account? <a href="#" onclick="location.reload();">Sign in</a>
+            Already have an account? <a href="#" id="login-link">Sign in</a>
         </div>
         </div>
+        """, unsafe_allow_html=True)
+        
+        # Button to go back to login
+        if st.button("Back to Login", key="back_to_login", type="secondary"):
+            st.session_state.show_register = False
+            st.rerun()
+        
+        # JavaScript to trigger login
+        st.markdown("""
+        <script>
+            document.getElementById('login-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('button[data-testid="baseButton-secondary"]').click();
+            });
+        </script>
         """, unsafe_allow_html=True)
 
 # Main app
@@ -1462,7 +1492,7 @@ def main():
     except Exception as e:
         st.error(f"Error loading page: {e}")
         st.exception(e)
-    
+
     # Footer - Match Flask Design
     st.markdown("""
     <footer style="background: white; border-top: 1px solid #e2e8f0; padding: 24px 0; margin-top: 3rem;">
