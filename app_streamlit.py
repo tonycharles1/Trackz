@@ -25,7 +25,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS - Using markdown for better Streamlit Cloud compatibility
+# Custom CSS - Enhanced for Streamlit Cloud compatibility
+# Inject CSS using markdown with !important flags for better compatibility
 st.markdown("""
 <style>
     @font-face {
@@ -36,44 +37,82 @@ st.markdown("""
     }
     
     * {
-        font-family: 'DIN', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: 'DIN', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
     }
     
     .main-header {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #2d3748;
-        margin-bottom: 0.5rem;
+        font-size: 2.5rem !important;
+        font-weight: 700 !important;
+        color: #2d3748 !important;
+        margin-bottom: 0.5rem !important;
     }
     
     .sub-header {
-        color: #718096;
-        font-size: 1rem;
-        margin-bottom: 2rem;
+        color: #718096 !important;
+        font-size: 1rem !important;
+        margin-bottom: 2rem !important;
     }
     
     .stButton>button {
-        background-color: #ff6b35;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.5rem 1.5rem;
-        font-weight: 600;
-        transition: all 0.2s;
+        background-color: #ff6b35 !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 0.5rem 1.5rem !important;
+        font-weight: 600 !important;
+        transition: all 0.2s !important;
     }
     
     .stButton>button:hover {
-        background-color: #e55a2b;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        background-color: #e55a2b !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3) !important;
     }
     
     .metric-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        text-align: center;
+        background: white !important;
+        padding: 1.5rem !important;
+        border-radius: 12px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+        text-align: center !important;
+    }
+    
+    /* App background */
+    .stApp {
+        background-color: #f8f9fa !important;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+        color: #2d3748 !important;
+        font-weight: 700 !important;
+    }
+    
+    /* Sidebar styling */
+    [data-testid="stSidebar"] {
+        background-color: white !important;
+    }
+    
+    /* Metric cards */
+    [data-testid="stMetricValue"] {
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+        color: #2d3748 !important;
+    }
+    
+    [data-testid="stMetricLabel"] {
+        color: #718096 !important;
+        font-size: 0.9rem !important;
+    }
+    
+    /* Dataframe styling */
+    .stDataFrame {
+        border-radius: 8px !important;
+    }
+    
+    /* Ensure CSS loads on all pages */
+    iframe {
+        display: none;
     }
 </style>
 """, unsafe_allow_html=True)
