@@ -1196,24 +1196,25 @@ def login_page():
             <div class="social-btn">F</div>
             <div class="social-btn">X</div>
         </div>
+        <div class="footer">
+            Don't have an account? <a href="#" id="register-link">Sign up</a>
+        </div>
         </div>
         """, unsafe_allow_html=True)
         
-        # Register button (orange, styled like Sign In button)
-        if st.button("REGISTER", key="toggle_register", use_container_width=True, type="primary"):
+        # Hidden button to trigger registration
+        if st.button("Register", key="toggle_register", type="secondary", help="Click to register"):
             st.session_state.show_register = True
             st.rerun()
         
-        # Style the register button to match
+        # JavaScript to trigger registration from link
         st.markdown("""
-        <style>
-            button[key="toggle_register"] {
-                background-color: var(--accent) !important;
-                color: var(--secondary) !important;
-                border: 2px solid var(--primary) !important;
-                margin-top: 15px !important;
-            }
-        </style>
+        <script>
+            document.getElementById('register-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('button[data-testid="baseButton-secondary"]').click();
+            });
+        </script>
         """, unsafe_allow_html=True)
     
     # Registration form (same style) - Only show if register is selected
@@ -1283,23 +1284,33 @@ def login_page():
                 else:
                     st.error("Please fill in all fields")
         
-        st.markdown("</div>", unsafe_allow_html=True)
+        # Divider and social login (same as login page)
+        st.markdown("""
+        <div class="divider">OR</div>
+        <div class="social-login">
+            <div class="social-btn">G</div>
+            <div class="social-btn">F</div>
+            <div class="social-btn">X</div>
+        </div>
+        <div class="footer">
+            Already have an account? <a href="#" id="login-link">Sign in</a>
+        </div>
+        </div>
+        """, unsafe_allow_html=True)
         
-        # Login button (orange, styled like Sign Up button)
-        if st.button("LOGIN", key="back_to_login", use_container_width=True, type="primary"):
+        # Hidden button to go back to login
+        if st.button("Login", key="back_to_login", type="secondary", help="Click to login"):
             st.session_state.show_register = False
             st.rerun()
         
-        # Style the login button to match
+        # JavaScript to trigger login from link
         st.markdown("""
-        <style>
-            button[key="back_to_login"] {
-                background-color: var(--accent) !important;
-                color: var(--secondary) !important;
-                border: 2px solid var(--primary) !important;
-                margin-top: 15px !important;
-            }
-        </style>
+        <script>
+            document.getElementById('login-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('button[data-testid="baseButton-secondary"]').click();
+            });
+        </script>
         """, unsafe_allow_html=True)
 
 # Main app
