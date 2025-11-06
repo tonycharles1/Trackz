@@ -6,11 +6,11 @@ textColor = "#2d3748"
 font = "sans-serif"
 
 [server]
-headless = false
-runOnSave = true
+headless = true
+runOnSave = false
 fileWatcherType = "auto"
+enableCORS = false
+enableXsrfProtection = true
 
 [browser]
-serverAddress = "localhost"
-serverPort = 8501
 gatherUsageStats = false
