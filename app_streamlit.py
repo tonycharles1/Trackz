@@ -25,94 +25,262 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS - Enhanced for Streamlit Cloud compatibility
-# Inject CSS using markdown with !important flags for better compatibility
+# Custom CSS - Premium interface design for Streamlit Cloud
 st.markdown("""
 <style>
-    @font-face {
-        font-family: 'DIN';
-        src: local('DIN'), local('DIN-Regular'), local('FF DIN'), local('FF-DIN-Regular');
-        font-weight: 400;
-        font-style: normal;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
     * {
-        font-family: 'DIN', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
     }
     
+    /* Main App Styling */
+    .stApp {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+        background-attachment: fixed !important;
+    }
+    
+    /* Main Header */
     .main-header {
-        font-size: 2.5rem !important;
-        font-weight: 700 !important;
-        color: #2d3748 !important;
+        font-size: 2.75rem !important;
+        font-weight: 800 !important;
+        color: #1a202c !important;
         margin-bottom: 0.5rem !important;
+        letter-spacing: -0.02em !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
     }
     
     .sub-header {
-        color: #718096 !important;
-        font-size: 1rem !important;
+        color: #64748b !important;
+        font-size: 1.1rem !important;
         margin-bottom: 2rem !important;
-    }
-    
-    .stButton>button {
-        background-color: #ff6b35 !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 8px !important;
-        padding: 0.5rem 1.5rem !important;
-        font-weight: 600 !important;
-        transition: all 0.2s !important;
-    }
-    
-    .stButton>button:hover {
-        background-color: #e55a2b !important;
-        transform: translateY(-1px) !important;
-        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3) !important;
-    }
-    
-    .metric-card {
-        background: white !important;
-        padding: 1.5rem !important;
-        border-radius: 12px !important;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
-        text-align: center !important;
-    }
-    
-    /* App background */
-    .stApp {
-        background-color: #f8f9fa !important;
+        font-weight: 400 !important;
     }
     
     /* Headings */
     h1, h2, h3, h4, h5, h6 {
-        color: #2d3748 !important;
+        color: #1e293b !important;
         font-weight: 700 !important;
+        letter-spacing: -0.01em !important;
     }
     
-    /* Sidebar styling */
+    /* Buttons - Modern Design */
+    .stButton>button {
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 12px !important;
+        padding: 0.75rem 2rem !important;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 4px 14px 0 rgba(255, 107, 53, 0.39) !important;
+        text-transform: none !important;
+        letter-spacing: 0.02em !important;
+    }
+    
+    .stButton>button:hover {
+        transform: translateY(-2px) scale(1.02) !important;
+        box-shadow: 0 8px 20px 0 rgba(255, 107, 53, 0.5) !important;
+        background: linear-gradient(135deg, #f7931e 0%, #ff6b35 100%) !important;
+    }
+    
+    .stButton>button:active {
+        transform: translateY(0) scale(0.98) !important;
+    }
+    
+    /* Sidebar - Premium Design */
     [data-testid="stSidebar"] {
-        background-color: white !important;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.05) !important;
     }
     
-    /* Metric cards */
+    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] {
+        color: #1e293b !important;
+    }
+    
+    /* Metric Cards - Card Design */
     [data-testid="stMetricValue"] {
-        font-size: 2rem !important;
-        font-weight: 700 !important;
-        color: #2d3748 !important;
+        font-size: 2.25rem !important;
+        font-weight: 800 !important;
+        color: #1e293b !important;
+        line-height: 1.2 !important;
     }
     
     [data-testid="stMetricLabel"] {
-        color: #718096 !important;
-        font-size: 0.9rem !important;
+        color: #64748b !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
     }
     
-    /* Dataframe styling */
+    [data-testid="stMetricContainer"] {
+        background: white !important;
+        padding: 1.5rem !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+        border: 1px solid rgba(226, 232, 240, 0.8) !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    [data-testid="stMetricContainer"]:hover {
+        transform: translateY(-4px) !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    }
+    
+    /* Dataframe/Table Styling */
     .stDataFrame {
-        border-radius: 8px !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+        background: white !important;
     }
     
-    /* Ensure CSS loads on all pages */
-    iframe {
-        display: none;
+    .stDataFrame table {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+    
+    .stDataFrame thead th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+        font-weight: 600 !important;
+        padding: 1rem !important;
+        text-transform: uppercase !important;
+        font-size: 0.75rem !important;
+        letter-spacing: 0.05em !important;
+    }
+    
+    .stDataFrame tbody td {
+        padding: 0.875rem 1rem !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+    }
+    
+    .stDataFrame tbody tr:hover {
+        background-color: #f8fafc !important;
+    }
+    
+    /* Text Inputs */
+    .stTextInput>div>div>input {
+        border-radius: 10px !important;
+        border: 2px solid #e2e8f0 !important;
+        padding: 0.75rem 1rem !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .stTextInput>div>div>input:focus {
+        border-color: #ff6b35 !important;
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1) !important;
+    }
+    
+    /* Selectbox */
+    .stSelectbox>div>div {
+        border-radius: 10px !important;
+        border: 2px solid #e2e8f0 !important;
+    }
+    
+    /* Expanders */
+    .streamlit-expanderHeader {
+        background: white !important;
+        border-radius: 10px !important;
+        padding: 1rem !important;
+        font-weight: 600 !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Forms */
+    .stForm {
+        background: white !important;
+        padding: 2rem !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+    
+    /* Checkboxes */
+    .stCheckbox {
+        padding: 0.5rem !important;
+    }
+    
+    .stCheckbox label {
+        font-weight: 500 !important;
+        color: #1e293b !important;
+    }
+    
+    /* Dividers */
+    hr {
+        border: none !important;
+        border-top: 2px solid #e2e8f0 !important;
+        margin: 2rem 0 !important;
+    }
+    
+    /* Success/Error Messages */
+    .stSuccess {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+        color: white !important;
+        border-radius: 10px !important;
+        padding: 1rem !important;
+        box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3) !important;
+    }
+    
+    .stError {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+        color: white !important;
+        border-radius: 10px !important;
+        padding: 1rem !important;
+        box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3) !important;
+    }
+    
+    /* Info Messages */
+    .stInfo {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+        color: white !important;
+        border-radius: 10px !important;
+        padding: 1rem !important;
+        box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3) !important;
+    }
+    
+    /* Charts Container */
+    [data-testid="stVerticalBlock"] {
+        gap: 1.5rem !important;
+    }
+    
+    /* File Uploader */
+    .stFileUploader {
+        border-radius: 10px !important;
+        border: 2px dashed #cbd5e1 !important;
+        padding: 1.5rem !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .stFileUploader:hover {
+        border-color: #ff6b35 !important;
+        background-color: #fff7ed !important;
+    }
+    
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #f7931e 0%, #ff6b35 100%);
     }
 </style>
 """, unsafe_allow_html=True)
