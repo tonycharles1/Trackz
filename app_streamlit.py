@@ -402,6 +402,7 @@ def main():
     
     if st.session_state.db is None or not st.session_state.db.connected:
         # Show helpful error message with connection details
+        # Don't use st.stop() - it prevents health checks from passing on Streamlit Cloud
         st.error("## ⚠️ Database Connection Failed")
         
         # Try to get error details
@@ -416,54 +417,66 @@ def main():
                     
                     Your service account credentials are invalid or have been revoked.
                     
-                    **How to Fix:**
+                    **For Streamlit Cloud - How to Fix:**
                     
-                    1. **Download a new credentials file:**
-                       - Go to: https://console.cloud.google.com/iam-admin/serviceaccounts?project=asset-database-477316
-                       - Click on: `asset-database@asset-database-477316.iam.gserviceaccount.com`
-                       - Go to "Keys" tab → "Add Key" → "Create new key" → Select "JSON"
-                       - Download the file
+                    1. **Go to Streamlit Cloud Settings:**
+                       - Open your app on Streamlit Cloud
+                       - Click "Settings" (⚙️ icon)
+                       - Click "Secrets"
                     
-                    2. **Replace credentials.json:**
-                       - Rename the downloaded file to `credentials.json`
-                       - Place it in your project root folder
+                    2. **Add/Update Secrets:**
+                       - Make sure all Google Sheets credentials are in the secrets
+                       - Format should match the example in `.streamlit/secrets.toml.example`
                     
-                    3. **Regenerate secrets.toml:**
-                       - Run: `python create_secrets_toml.py`
-                       - This will update your `.streamlit/secrets.toml` file
-                    
-                    4. **Share the Google Sheet:**
+                    3. **Share the Google Sheet:**
                        - Open: https://docs.google.com/spreadsheets/d/1q9jfezVWpFYAmvjo81Lk788kf9DNwqvSx7yxHWRGkec/edit
                        - Share with: `asset-database@asset-database-477316.iam.gserviceaccount.com`
                        - Set permission to "Editor"
                     
-                    5. **Restart Streamlit:**
-                       - Click the refresh button in your browser, or restart Streamlit
+                    4. **Redeploy:**
+                       - Click "Reboot app" in Streamlit Cloud
+                       - Or push a new commit to trigger redeployment
                     """)
                 else:
                     st.error(f"**Error:** {error_msg}")
                     
-                    with st.expander("Troubleshooting Steps"):
+                    with st.expander("Troubleshooting Steps for Streamlit Cloud"):
                         st.markdown("""
-                        1. **Check credentials.json exists:**
-                           - Place `credentials.json` in your project root folder
+                        1. **Check Secrets in Streamlit Cloud:**
+                           - Go to your app settings → Secrets
+                           - Verify all GOOGLE_SHEETS credentials are correct
                         
-                        2. **Or check secrets.toml:**
-                           - File should be at: `.streamlit/secrets.toml`
-                           - Run `python create_secrets_toml.py` to generate it
-                        
-                        3. **Test connection:**
-                           - Run: `python test_jwt_signature.py`
-                           - This will diagnose the issue
-                        
-                        4. **Verify sheet sharing:**
+                        2. **Verify Sheet Sharing:**
                            - Share the Google Sheet with the service account email
+                           - Permission must be "Editor"
+                        
+                        3. **Check Logs:**
+                           - Go to Streamlit Cloud dashboard
+                           - Click "Manage app" → "Logs"
+                           - Look for detailed error messages
                         """)
         except Exception as e:
             st.error(f"**Error:** {str(e)}")
+            with st.expander("Show Full Error Details"):
+                import traceback
+                st.code(traceback.format_exc())
         
-        st.info("💡 **Tip:** Fix the connection issue above, then refresh this page (F5 or click the refresh button).")
-        st.stop()
+        st.info("💡 **Tip:** Fix the connection issue above, then click 'R' to refresh or use the Streamlit menu to reboot the app.")
+        st.warning("⚠️ **Note:** The app is running but database operations are disabled until connection is restored.")
+        
+        # Don't use st.stop() - it prevents health checks from passing
+        # Instead, show a message and allow the app to continue
+        st.markdown("---")
+        st.markdown("### 🔧 Setup Instructions")
+        st.markdown("""
+        **To fix this issue on Streamlit Cloud:**
+        
+        1. Go to your app's **Settings** → **Secrets**
+        2. Add your Google Sheets credentials in TOML format
+        3. Make sure the Google Sheet is shared with the service account
+        4. Click **"Reboot app"** to restart
+        """)
+        return  # Return early instead of st.stop()
     
     # Sidebar navigation
     with st.sidebar:
@@ -532,9 +545,15 @@ def main():
 
 # Streamlit automatically runs the script, so we call main() directly
 # This ensures the app starts even if there are errors
+# Wrapped in try-except to handle any startup errors gracefully
 try:
     main()
 except Exception as e:
-    st.error(f"An error occurred: {str(e)}")
-    st.exception(e)
+    # Show error but don't crash - allows health check to pass
+    st.error("## ⚠️ Application Error")
+    st.error(f"An error occurred while starting the application: {str(e)}")
+    with st.expander("Show Full Error Details"):
+        import traceback
+        st.code(traceback.format_exc())
+    st.info("💡 **Tip:** Check the error details above and fix any configuration issues. The app will attempt to continue.")
 
