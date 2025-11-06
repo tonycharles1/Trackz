@@ -25,21 +25,53 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS - Premium interface design for Streamlit Cloud
-# Inject CSS early and ensure it persists
+# Custom CSS - Matching Flask Template Design
+# Inject CSS early and ensure it persists - Based on templates/base.html
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css');
     
-    * {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    /* DIN Font (same as Flask) */
+    @font-face {
+        font-family: 'DIN';
+        src: local('DIN'), local('DIN-Regular'), local('FF DIN'), local('FF-DIN-Regular'),
+             url('https://fonts.cdnfonts.com/s/14882/DIN-Regular.woff') format('woff'),
+             url('https://fonts.cdnfonts.com/s/14882/DIN-Regular.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
     }
     
-    /* Main App Styling */
+    @font-face {
+        font-family: 'DIN';
+        src: local('DIN Medium'), local('DIN-Medium'), local('FF DIN Medium'), local('FF-DIN-Medium'),
+             url('https://fonts.cdnfonts.com/s/14882/DIN-Medium.woff') format('woff'),
+             url('https://fonts.cdnfonts.com/s/14882/DIN-Medium.ttf') format('truetype');
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+    }
+    
+    @font-face {
+        font-family: 'DIN';
+        src: local('DIN Bold'), local('DIN-Bold'), local('FF DIN Bold'), local('FF-DIN-Bold'),
+             url('https://fonts.cdnfonts.com/s/14882/DIN-Bold.woff') format('woff'),
+             url('https://fonts.cdnfonts.com/s/14882/DIN-Bold.ttf') format('truetype');
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+    }
+    
+    * {
+        font-family: 'DIN', 'DIN Alternate', 'DIN Condensed', 'FF DIN', 'FF DIN Condensed', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Main App Styling - Match Flask background */
     .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
-        background-attachment: fixed !important;
+        background-color: #f5f7fa !important;
+        background: #f5f7fa !important;
     }
     
     /* Main Header */
@@ -62,36 +94,124 @@ st.markdown("""
         font-weight: 400 !important;
     }
     
-    /* Headings */
+    /* Headings - Match Flask */
     h1, h2, h3, h4, h5, h6 {
-        color: #1e293b !important;
+        color: #2d3748 !important;
         font-weight: 700 !important;
-        letter-spacing: -0.01em !important;
     }
     
-    /* Buttons - Modern Design */
-    .stButton>button {
-        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%) !important;
+    h1 {
+        font-size: 2rem !important;
+        margin-bottom: 8px !important;
+    }
+    
+    h2 {
+        font-size: 1.875rem !important;
+        margin-bottom: 24px !important;
+    }
+    
+    /* Buttons - Match Flask Design */
+    /* Primary/Orange Button */
+    .stButton>button[kind="primary"],
+    .stButton>button:not([kind="secondary"]):not([kind="minimal"]) {
+        background-color: #ff6b35 !important;
         color: white !important;
         border: none !important;
-        border-radius: 12px !important;
-        padding: 0.75rem 2rem !important;
+        border-radius: 8px !important;
+        padding: 10px 24px !important;
         font-weight: 600 !important;
-        font-size: 0.95rem !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        box-shadow: 0 4px 14px 0 rgba(255, 107, 53, 0.39) !important;
-        text-transform: none !important;
-        letter-spacing: 0.02em !important;
+        transition: all 0.2s !important;
+        box-shadow: none !important;
     }
     
-    .stButton>button:hover {
-        transform: translateY(-2px) scale(1.02) !important;
-        box-shadow: 0 8px 20px 0 rgba(255, 107, 53, 0.5) !important;
-        background: linear-gradient(135deg, #f7931e 0%, #ff6b35 100%) !important;
+    .stButton>button[kind="primary"]:hover,
+    .stButton>button:not([kind="secondary"]):not([kind="minimal"]):hover {
+        background-color: #e55a2b !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3) !important;
+        color: white !important;
     }
     
-    .stButton>button:active {
-        transform: translateY(0) scale(0.98) !important;
+    /* Secondary/Grey Button */
+    .stButton>button[kind="secondary"] {
+        background-color: #edf2f7 !important;
+        color: #2d3748 !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 10px 24px !important;
+        font-weight: 500 !important;
+        transition: all 0.2s !important;
+        box-shadow: none !important;
+    }
+    
+    .stButton>button[kind="secondary"]:hover {
+        background-color: #e2e8f0 !important;
+        color: #2d3748 !important;
+        transform: none !important;
+    }
+    
+    /* Success Button */
+    .stButton>button[kind="success"] {
+        background-color: #48bb78 !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        transition: all 0.2s !important;
+    }
+    
+    .stButton>button[kind="success"]:hover {
+        background-color: #38a169 !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3) !important;
+        color: white !important;
+    }
+    
+    /* Danger Button */
+    .stButton>button[kind="danger"] {
+        background-color: #f56565 !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        transition: all 0.2s !important;
+    }
+    
+    .stButton>button[kind="danger"]:hover {
+        background-color: #e53e3e !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3) !important;
+        color: white !important;
+    }
+    
+    /* Warning Button */
+    .stButton>button[kind="warning"] {
+        background-color: #ed8936 !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        transition: all 0.2s !important;
+    }
+    
+    .stButton>button[kind="warning"]:hover {
+        background-color: #dd6b20 !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(237, 137, 54, 0.3) !important;
+        color: white !important;
+    }
+    
+    /* Info Button */
+    .stButton>button[kind="info"] {
+        background-color: #4299e1 !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        transition: all 0.2s !important;
+    }
+    
+    .stButton>button[kind="info"]:hover {
+        background-color: #3182ce !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3) !important;
+        color: white !important;
     }
     
     /* Top Header Bar */
@@ -99,11 +219,28 @@ st.markdown("""
         padding-top: 1rem !important;
     }
     
-    /* Sidebar - Clean Menu Design */
+    /* Sidebar - Match Flask Design (White Card) */
     [data-testid="stSidebar"] {
-        background: #f8fafc !important;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.05) !important;
-        padding-top: 1rem !important;
+        background: white !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+        border-right: 1px solid #e2e8f0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Sidebar Header */
+    [data-testid="stSidebar"] > div:first-child {
+        background: #f7fafc !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        padding: 20px 16px !important;
+    }
+    
+    [data-testid="stSidebar"] h3 {
+        color: #2d3748 !important;
+        margin: 0 !important;
+        font-weight: 700 !important;
+        font-size: 0.875rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
     }
     
     /* Hide Streamlit default sidebar elements */
@@ -133,23 +270,23 @@ st.markdown("""
         margin-bottom: 1rem !important;
     }
     
-    /* Sidebar radio buttons - Menu items with icons */
+    /* Sidebar radio buttons - Match Flask nav-link design */
     [data-testid="stSidebar"] [data-baseweb="radio"] {
         background: transparent !important;
-        gap: 0.5rem !important;
+        padding: 8px !important;
     }
     
     [data-testid="stSidebar"] [data-baseweb="radio"] label {
-        padding: 0.75rem 1rem !important;
-        margin: 0.25rem 0 !important;
+        padding: 12px 16px !important;
+        margin: 4px 0 !important;
         border-radius: 8px !important;
-        transition: all 0.2s ease !important;
+        transition: all 0.2s !important;
         cursor: pointer !important;
         font-weight: 500 !important;
-        color: #475569 !important;
+        color: #4a5568 !important;
         display: flex !important;
         align-items: center !important;
-        gap: 0.75rem !important;
+        gap: 12px !important;
         background: transparent !important;
     }
     
@@ -159,27 +296,35 @@ st.markdown("""
         font-size: 1rem !important;
     }
     
-    /* Icon styling */
-    [data-testid="stSidebar"] .menu-icon {
-        font-size: 1.2rem !important;
+    /* Icon styling - Match Flask */
+    [data-testid="stSidebar"] .menu-icon,
+    [data-testid="stSidebar"] [data-baseweb="radio"] label span:first-child {
+        font-size: 1.1rem !important;
         width: 20px !important;
         display: inline-block !important;
         text-align: center !important;
+        color: #718096 !important;
     }
     
     [data-testid="stSidebar"] [data-baseweb="radio"] label:hover {
-        background-color: #e2e8f0 !important;
-        color: #1e293b !important;
+        background-color: #f7fafc !important;
+        color: #2d3748 !important;
+    }
+    
+    [data-testid="stSidebar"] [data-baseweb="radio"] label:hover .menu-icon,
+    [data-testid="stSidebar"] [data-baseweb="radio"] label:hover span:first-child {
+        color: #ff6b35 !important;
     }
     
     [data-testid="stSidebar"] [data-baseweb="radio"] input:checked + label {
-        background-color: #ff6b35 !important;
-        color: white !important;
+        background-color: #fff5f0 !important;
+        color: #ff6b35 !important;
         font-weight: 600 !important;
     }
     
-    [data-testid="stSidebar"] [data-baseweb="radio"] input:checked + label .menu-icon {
-        color: white !important;
+    [data-testid="stSidebar"] [data-baseweb="radio"] input:checked + label .menu-icon,
+    [data-testid="stSidebar"] [data-baseweb="radio"] input:checked + label span:first-child {
+        color: #ff6b35 !important;
     }
     
     [data-testid="stSidebar"] [data-baseweb="radio"] input:checked + label::before {
@@ -193,22 +338,50 @@ st.markdown("""
         margin: 1rem 0 !important;
     }
     
-    /* Main content cards */
+    /* Main content cards - Match Flask card design */
     .main .block-container > div {
-        background: white !important;
-        border-radius: 12px !important;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
-        padding: 2rem !important;
-        margin-bottom: 1.5rem !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin-bottom: 0 !important;
     }
     
-    /* Form styling */
+    /* Card styling - Match Flask */
+    .card, .stCard {
+        background: white !important;
+        border: none !important;
+        border-radius: 12px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+        margin-bottom: 24px !important;
+        transition: all 0.2s !important;
+        overflow: hidden !important;
+    }
+    
+    .card:hover, .stCard:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    }
+    
+    .card-header {
+        background: white !important;
+        color: #2d3748 !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 20px 24px !important;
+        font-weight: 600 !important;
+        font-size: 1.1rem !important;
+    }
+    
+    .card-body {
+        padding: 24px !important;
+    }
+    
+    /* Form styling - Match Flask */
     .stForm {
         background: white !important;
-        padding: 2rem !important;
+        padding: 24px !important;
         border-radius: 12px !important;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
         border: none !important;
+        margin-bottom: 24px !important;
     }
     
     /* Metric Cards - Card Design */
@@ -241,45 +414,62 @@ st.markdown("""
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
     }
     
-    /* Dataframe/Table Styling */
+    /* Dataframe/Table Styling - Match Flask table */
     .stDataFrame {
         border-radius: 12px !important;
         overflow: hidden !important;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+        border: 1px solid #e2e8f0 !important;
         background: white !important;
+        box-shadow: none !important;
     }
     
     .stDataFrame table {
         border-collapse: separate !important;
         border-spacing: 0 !important;
+        background: white !important;
+        margin: 0 !important;
+    }
+    
+    .stDataFrame thead {
+        background: #f7fafc !important;
     }
     
     .stDataFrame thead th {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        color: white !important;
+        border: none !important;
+        border-bottom: 2px solid #e2e8f0 !important;
         font-weight: 600 !important;
-        padding: 1rem !important;
+        padding: 16px !important;
+        color: #2d3748 !important;
+        font-size: 0.875rem !important;
         text-transform: uppercase !important;
-        font-size: 0.75rem !important;
-        letter-spacing: 0.05em !important;
+        letter-spacing: 0.5px !important;
+        background: #f7fafc !important;
     }
     
-    .stDataFrame tbody td {
-        padding: 0.875rem 1rem !important;
+    .stDataFrame tbody tr {
+        transition: background-color 0.2s !important;
         border-bottom: 1px solid #e2e8f0 !important;
     }
     
     .stDataFrame tbody tr:hover {
-        background-color: #f8fafc !important;
+        background-color: #f7fafc !important;
     }
     
-    /* Text Inputs */
+    .stDataFrame tbody td {
+        padding: 16px !important;
+        color: #4a5568 !important;
+        vertical-align: middle !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+    }
+    
+    /* Text Inputs - Match Flask form-control */
     .stTextInput>div>div>input {
-        border-radius: 10px !important;
-        border: 2px solid #e2e8f0 !important;
-        padding: 0.75rem 1rem !important;
-        transition: all 0.2s ease !important;
+        border-radius: 8px !important;
+        border: 1px solid #cbd5e0 !important;
+        padding: 10px 16px !important;
+        transition: all 0.2s !important;
         font-size: 1rem !important;
+        color: #2d3748 !important;
     }
     
     .stTextInput>div>div>input:focus {
@@ -289,21 +479,32 @@ st.markdown("""
     }
     
     .stTextInput>div>div>input::placeholder {
-        color: #94a3b8 !important;
+        color: #718096 !important;
     }
     
-    /* Input labels */
+    /* Input labels - Match Flask form-label */
     .stTextInput label {
         font-weight: 600 !important;
-        color: #1e293b !important;
-        font-size: 0.9rem !important;
-        margin-bottom: 0.5rem !important;
+        color: #2d3748 !important;
+        font-size: 0.875rem !important;
+        margin-bottom: 8px !important;
     }
     
-    /* Selectbox */
+    /* Selectbox - Match Flask form-select */
     .stSelectbox>div>div {
-        border-radius: 10px !important;
-        border: 2px solid #e2e8f0 !important;
+        border-radius: 8px !important;
+        border: 1px solid #cbd5e0 !important;
+    }
+    
+    .stSelectbox>div>div>select {
+        padding: 10px 16px !important;
+        color: #2d3748 !important;
+    }
+    
+    .stSelectbox>div>div>select:focus {
+        border-color: #ff6b35 !important;
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1) !important;
+        outline: none !important;
     }
     
     /* Expanders */
@@ -342,30 +543,41 @@ st.markdown("""
         margin: 2rem 0 !important;
     }
     
-    /* Success/Error Messages */
-    .stSuccess {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-        color: white !important;
-        border-radius: 10px !important;
-        padding: 1rem !important;
-        box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3) !important;
+    /* Alerts - Match Flask */
+    .stSuccess,
+    .alert-success {
+        background-color: #c6f6d5 !important;
+        color: #22543d !important;
+        border-radius: 8px !important;
+        border: none !important;
+        padding: 16px 20px !important;
     }
     
-    .stError {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
-        color: white !important;
-        border-radius: 10px !important;
-        padding: 1rem !important;
-        box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3) !important;
+    .stError,
+    .alert-danger {
+        background-color: #fed7d7 !important;
+        color: #742a2a !important;
+        border-radius: 8px !important;
+        border: none !important;
+        padding: 16px 20px !important;
     }
     
-    /* Info Messages */
-    .stInfo {
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-        color: white !important;
-        border-radius: 10px !important;
-        padding: 1rem !important;
-        box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3) !important;
+    .stInfo,
+    .alert-info {
+        background-color: #bee3f8 !important;
+        color: #2c5282 !important;
+        border-radius: 8px !important;
+        border: none !important;
+        padding: 16px 20px !important;
+    }
+    
+    .stWarning,
+    .alert-warning {
+        background-color: #feebc8 !important;
+        color: #744210 !important;
+        border-radius: 8px !important;
+        border: none !important;
+        padding: 16px 20px !important;
     }
     
     /* Charts Container */
@@ -744,7 +956,7 @@ def login_page():
                         st.error("Invalid username or password")
                 else:
                     st.error("Database connection failed")
-        
+    
         # Register link - Using Streamlit button styled as link
         st.markdown("""
         <div style="text-align: center; margin-top: 1.5rem;">
@@ -785,41 +997,41 @@ def login_page():
         if st.session_state.get('show_register', False):
             st.markdown("---")
             st.markdown("### Register New Account")
-            with st.form("register_form"):
+        with st.form("register_form"):
                 reg_username = st.text_input("Username", placeholder="Enter your username", key="reg_username")
                 reg_email = st.text_input("Email", placeholder="Enter your email", key="reg_email")
                 reg_password = st.text_input("Password", type="password", placeholder="Enter your password", key="reg_password")
                 reg_confirm = st.text_input("Confirm Password", type="password", placeholder="Confirm your password", key="reg_confirm")
-                reg_role = st.selectbox("Role", ["user", "admin"], key="reg_role")
+            reg_role = st.selectbox("Role", ["user", "admin"], key="reg_role")
                 submit_reg = st.form_submit_button("Register", use_container_width=True, type="primary")
-                
-                if submit_reg:
-                    if reg_password != reg_confirm:
-                        st.error("Passwords do not match")
-                    elif reg_username and reg_email and reg_password:
-                        db = get_db()
-                        if db:
-                            users = db.get_all('Users')
-                            existing = next((u for u in users if u.get('Username') == reg_username), None)
-                            if existing:
-                                st.error("Username already exists")
-                            else:
-                                user_data = {
-                                    'Username': reg_username,
-                                    'Email': reg_email,
-                                    'Password': hash_password(reg_password),
-                                    'Role': reg_role
-                                }
-                                if db.insert('Users', user_data):
-                                    st.success("Registration successful! Please login.")
+            
+            if submit_reg:
+                if reg_password != reg_confirm:
+                    st.error("Passwords do not match")
+                elif reg_username and reg_email and reg_password:
+                    db = get_db()
+                    if db:
+                        users = db.get_all('Users')
+                        existing = next((u for u in users if u.get('Username') == reg_username), None)
+                        if existing:
+                            st.error("Username already exists")
+                        else:
+                            user_data = {
+                                'Username': reg_username,
+                                'Email': reg_email,
+                                'Password': hash_password(reg_password),
+                                'Role': reg_role
+                            }
+                            if db.insert('Users', user_data):
+                                st.success("Registration successful! Please login.")
                                     st.session_state.show_register = False
                                     st.rerun()
-                                else:
-                                    st.error("Registration failed")
+                            else:
+                                st.error("Registration failed")
                         else:
                             st.error("Database connection failed")
-                    else:
-                        st.error("Please fill in all fields")
+                else:
+                    st.error("Please fill in all fields")
         
         # Footer
         st.markdown("""
@@ -920,30 +1132,33 @@ def main():
         """)
         return  # Return early instead of st.stop()
     
-    # Top Header Bar - Styled container
-    st.markdown("""
-    <div style="background: white; padding: 1rem 2rem; margin: -1rem -1rem 1.5rem -1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000;">
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">📦</div>
-            <h2 style="margin: 0; color: #1e293b; font-weight: 700; font-size: 1.5rem;">Asset Management</h2>
+    # Top Navbar - Match Flask Design
+    col_nav1, col_nav2 = st.columns([1, 1])
+    with col_nav1:
+        st.markdown("""
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="bi bi-box-seam" style="color: #ff6b35; font-size: 1.5rem;"></i>
+            <span style="font-weight: 700; font-size: 1.5rem; color: #2d3748;">Asset Management</span>
         </div>
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <span style="color: #64748b; font-size: 0.9rem;">Welcome, <strong style="color: #1e293b;">{}</strong> ({})</span>
+        """, unsafe_allow_html=True)
+    with col_nav2:
+        st.markdown(f"""
+        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.75rem;">
+            <span style="color: #718096; font-weight: 400;">
+                Welcome, <strong style="color: #2d3748;">{st.session_state.user_id}</strong> ({st.session_state.role})
+            </span>
         </div>
-    </div>
-    """.format(st.session_state.user_id, st.session_state.role), unsafe_allow_html=True)
-    
-    # Logout button in separate column for better layout
-    col1, col2, col3 = st.columns([3, 1, 1])
-    with col3:
-        if st.button("Logout", use_container_width=True, type="secondary"):
+        """, unsafe_allow_html=True)
+        if st.button("Logout", key="logout_btn", use_container_width=False, type="secondary"):
             st.session_state.authenticated = False
             st.session_state.user_id = None
             st.session_state.role = None
             st.session_state.db = None
             st.rerun()
     
-    # Sidebar navigation - Icon-based menu
+    st.markdown("---")
+    
+    # Sidebar navigation - Match Flask Design
     with st.sidebar:
         # Hide Streamlit default navigation
         st.markdown("""
@@ -951,12 +1166,24 @@ def main():
             [data-testid="stSidebarNav"] {
                 display: none !important;
             }
+            [data-testid="stSidebar"] button[kind="header"] {
+                display: none !important;
+            }
+            [data-testid="stSidebar"] [data-baseweb="input"] {
+                display: none !important;
+            }
+            [data-testid="stSidebar"] [data-testid="collapsedControl"] {
+                display: none !important;
+            }
         </style>
         """, unsafe_allow_html=True)
         
-        # Menu Header
-        st.markdown("### MENU")
-        st.markdown("---")
+        # Sidebar Header - Match Flask
+        st.markdown("""
+        <div style="background: #f7fafc; border-bottom: 1px solid #e2e8f0; padding: 20px 16px; margin: -1rem -1rem 1rem -1rem;">
+            <h5 style="color: #2d3748; margin: 0; font-weight: 700; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px;">MENU</h5>
+        </div>
+        """, unsafe_allow_html=True)
         
         # Navigation menu with icons (using emojis for better visibility)
         menu_items = [
@@ -1038,6 +1265,19 @@ def main():
     except Exception as e:
         st.error(f"Error loading page: {e}")
         st.exception(e)
+    
+    # Footer - Match Flask Design
+    st.markdown("""
+    <footer style="background: white; border-top: 1px solid #e2e8f0; padding: 24px 0; margin-top: 3rem;">
+        <div style="max-width: 1600px; margin: 0 auto; padding: 0 24px;">
+            <div style="text-align: center; color: #718096; font-size: 0.875rem;">
+                <p style="margin: 0;">
+                    Powered by : <strong style="color: #ff6b35;">Trackz Solutions and Technologies</strong>
+                </p>
+            </div>
+        </div>
+    </footer>
+    """, unsafe_allow_html=True)
 
 # Streamlit automatically runs the script, so we call main() directly
 # This ensures the app starts even if there are errors
