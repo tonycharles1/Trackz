@@ -745,22 +745,26 @@ def login_page():
                 else:
                     st.error("Database connection failed")
         
-        # Register link with button functionality
-        col_reg1, col_reg2, col_reg3 = st.columns([1, 1, 1])
-        with col_reg2:
-            if st.button("Register here", use_container_width=True, key="show_register_btn"):
-                st.session_state.show_register = True
-                st.rerun()
-        
+        # Register link
         st.markdown("""
-        <div style="text-align: center; margin-top: 1rem;">
+        <div style="text-align: center; margin-top: 1.5rem;">
             <p style="color: #64748b; font-size: 0.9rem; margin: 0;">
-                Don't have an account? 
+                Don't have an account? <span id="register-link" style="color: #ff6b35; text-decoration: none; font-weight: 600; cursor: pointer;">Register here</span>
             </p>
         </div>
+        <script>
+            document.getElementById('register-link').addEventListener('click', function() {
+                window.parent.postMessage({type: 'streamlit:setComponentValue', value: 'show_register'}, '*');
+            });
+        </script>
         """, unsafe_allow_html=True)
         
-        # Registration form (shown when Register button clicked)
+        # Toggle registration form
+        if st.button("Show Register", key="toggle_register", help="Click to show registration form"):
+            st.session_state.show_register = not st.session_state.get('show_register', False)
+            st.rerun()
+        
+        # Registration form (shown when Register link clicked)
         if st.session_state.get('show_register', False):
             with st.expander("Register New Account", expanded=True):
                 with st.form("register_form"):
