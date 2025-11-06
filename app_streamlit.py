@@ -1085,6 +1085,11 @@ def login_page():
         """, unsafe_allow_html=True)
     
     with col2:
+        # Form container with padding
+        st.markdown("""
+        <div style="background: linear-gradient(180deg, #ffffff, rgba(255,255,255,0.98)); padding: 34px 40px; border-radius: 0 18px 18px 0; min-height: 520px;">
+        """, unsafe_allow_html=True)
+        
         # Tabs
         tab1, tab2 = st.tabs(["Login", "Register"])
         
@@ -1121,20 +1126,6 @@ def login_page():
                             st.error("Invalid username or password")
                     else:
                         st.error("Database connection failed")
-                
-                # Social login
-                st.markdown("""
-                <div style="display: flex; align-items: center; gap: 12px; margin: 18px 0;">
-                    <span style="height: 1px; background: #eef2ff; flex: 1;"></span>
-                    <div style="font-size: 13px; color: #6b7280; text-align: center;">or continue with</div>
-                    <span style="height: 1px; background: #eef2ff; flex: 1;"></span>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <button style="flex: 1; padding: 10px; border-radius: 10px; border: 1px solid #eef2ff; background: white; cursor: pointer;">Google</button>
-                    <button style="flex: 1; padding: 10px; border-radius: 10px; border: 1px solid #eef2ff; background: white; cursor: pointer;">GitHub</button>
-                </div>
-                <p style="margin-top: 18px; font-size: 13px; color: #6b7280;">Forgot password? <a href="#" style="color: #5b6fff; text-decoration: none; font-weight: 500;">Reset</a></p>
-                """, unsafe_allow_html=True)
         
         with tab2:
             with st.form("register_form"):
@@ -1179,6 +1170,9 @@ def login_page():
                             st.error("Database connection failed")
                     else:
                         st.error("Please fill in all required fields")
+        
+        # Close form container
+        st.markdown("</div>", unsafe_allow_html=True)
     
     # Add CSS for form styling
     st.markdown("""
