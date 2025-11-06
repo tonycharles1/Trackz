@@ -116,7 +116,14 @@ def show(db, role):
 
 def add_asset_form(db):
     """Add asset form"""
-    with st.form("add_asset_form"):
+    # File uploaders outside form (cannot be inside forms in some Streamlit versions)
+    col1, col2 = st.columns(2)
+    with col1:
+        image_file = st.file_uploader("Image Attachment", type=['png', 'jpg', 'jpeg', 'gif', 'webp'], key="asset_image_upload")
+    with col2:
+        document_file = st.file_uploader("Document Attachment", type=['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'], key="asset_doc_upload")
+    
+    with st.form("add_asset_form", clear_on_submit=True):
         col1, col2 = st.columns(2)
         
         with col1:
@@ -126,29 +133,23 @@ def add_asset_form(db):
             asset_category = st.selectbox("Asset Category *", [""] + category_names, key="asset_category_select")
             subcategories = db.get_all('Subcategories')
             subcategory_names = [s.get('Subcategory Name', '') for s in subcategories]
-            asset_subcategory = st.selectbox("Asset Subcategory", [""] + subcategory_names)
+            asset_subcategory = st.selectbox("Asset Subcategory", [""] + subcategory_names, key="asset_subcategory_select")
             brands = db.get_all('Brands')
             brand_names = [b.get('Brand Name', '') for b in brands]
-            brand = st.selectbox("Brand", [""] + brand_names)
-            asset_description = st.text_area("Asset Description")
+            brand = st.selectbox("Brand", [""] + brand_names, key="asset_brand_select")
+            asset_description = st.text_area("Asset Description", key="asset_description_text")
         
         with col2:
-            amount = st.number_input("Amount", min_value=0.0, step=0.01)
+            amount = st.number_input("Amount", min_value=0.0, step=0.01, key="asset_amount_input")
             locations = db.get_all('Locations')
             location_names = [l.get('Location Name', '') for l in locations]
-            location = st.selectbox("Location", [""] + location_names)
-            date_of_purchase = st.date_input("Date of Purchase")
-            warranty = st.text_input("Warranty")
-            department = st.text_input("Department")
-            ownership = st.text_input("Ownership")
+            location = st.selectbox("Location", [""] + location_names, key="asset_location_select")
+            date_of_purchase = st.date_input("Date of Purchase", key="asset_date_input")
+            warranty = st.text_input("Warranty", key="asset_warranty_input")
+            department = st.text_input("Department", key="asset_department_input")
+            ownership = st.text_input("Ownership", key="asset_ownership_input")
             status_options = ["", "Active", "Inactive", "Under Maintenance", "Disposed", "Sold", "Lost"]
-            asset_status = st.selectbox("Asset Status", status_options)
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            image_file = st.file_uploader("Image Attachment", type=['png', 'jpg', 'jpeg', 'gif', 'webp'])
-        with col2:
-            document_file = st.file_uploader("Document Attachment", type=['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'])
+            asset_status = st.selectbox("Asset Status", status_options, key="asset_status_select")
         
         submitted = st.form_submit_button("💾 Save Asset", use_container_width=True)
         
