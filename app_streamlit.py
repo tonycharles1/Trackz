@@ -997,41 +997,41 @@ def login_page():
         if st.session_state.get('show_register', False):
             st.markdown("---")
             st.markdown("### Register New Account")
-        with st.form("register_form"):
+            with st.form("register_form"):
                 reg_username = st.text_input("Username", placeholder="Enter your username", key="reg_username")
                 reg_email = st.text_input("Email", placeholder="Enter your email", key="reg_email")
                 reg_password = st.text_input("Password", type="password", placeholder="Enter your password", key="reg_password")
                 reg_confirm = st.text_input("Confirm Password", type="password", placeholder="Confirm your password", key="reg_confirm")
-            reg_role = st.selectbox("Role", ["user", "admin"], key="reg_role")
+                reg_role = st.selectbox("Role", ["user", "admin"], key="reg_role")
                 submit_reg = st.form_submit_button("Register", use_container_width=True, type="primary")
-            
-            if submit_reg:
-                if reg_password != reg_confirm:
-                    st.error("Passwords do not match")
-                elif reg_username and reg_email and reg_password:
-                    db = get_db()
-                    if db:
-                        users = db.get_all('Users')
-                        existing = next((u for u in users if u.get('Username') == reg_username), None)
-                        if existing:
-                            st.error("Username already exists")
-                        else:
-                            user_data = {
-                                'Username': reg_username,
-                                'Email': reg_email,
-                                'Password': hash_password(reg_password),
-                                'Role': reg_role
-                            }
-                            if db.insert('Users', user_data):
-                                st.success("Registration successful! Please login.")
+                
+                if submit_reg:
+                    if reg_password != reg_confirm:
+                        st.error("Passwords do not match")
+                    elif reg_username and reg_email and reg_password:
+                        db = get_db()
+                        if db:
+                            users = db.get_all('Users')
+                            existing = next((u for u in users if u.get('Username') == reg_username), None)
+                            if existing:
+                                st.error("Username already exists")
+                            else:
+                                user_data = {
+                                    'Username': reg_username,
+                                    'Email': reg_email,
+                                    'Password': hash_password(reg_password),
+                                    'Role': reg_role
+                                }
+                                if db.insert('Users', user_data):
+                                    st.success("Registration successful! Please login.")
                                     st.session_state.show_register = False
                                     st.rerun()
-                            else:
-                                st.error("Registration failed")
+                                else:
+                                    st.error("Registration failed")
                         else:
                             st.error("Database connection failed")
-                else:
-                    st.error("Please fill in all fields")
+                    else:
+                        st.error("Please fill in all fields")
         
         # Footer
         st.markdown("""
