@@ -103,19 +103,25 @@ class GoogleSheetsDB:
         """Connect to Google Sheets using Streamlit secrets"""
         try:
             # Get credentials from Streamlit secrets
-            if 'GOOGLE_SHEETS' in st.secrets:
+            # Use try-except to handle missing secrets gracefully
+            try:
+                secrets = st.secrets
+            except Exception:
+                secrets = {}
+            
+            if 'GOOGLE_SHEETS' in secrets:
                 try:
                     creds_dict = {
-                        "type": st.secrets["GOOGLE_SHEETS"]["type"],
-                        "project_id": st.secrets["GOOGLE_SHEETS"]["project_id"],
-                        "private_key_id": st.secrets["GOOGLE_SHEETS"]["private_key_id"],
-                        "private_key": st.secrets["GOOGLE_SHEETS"]["private_key"],
-                        "client_email": st.secrets["GOOGLE_SHEETS"]["client_email"],
-                        "client_id": st.secrets["GOOGLE_SHEETS"]["client_id"],
-                        "auth_uri": st.secrets["GOOGLE_SHEETS"]["auth_uri"],
-                        "token_uri": st.secrets["GOOGLE_SHEETS"]["token_uri"],
-                        "auth_provider_x509_cert_url": st.secrets["GOOGLE_SHEETS"]["auth_provider_x509_cert_url"],
-                        "client_x509_cert_url": st.secrets["GOOGLE_SHEETS"]["client_x509_cert_url"]
+                        "type": secrets["GOOGLE_SHEETS"]["type"],
+                        "project_id": secrets["GOOGLE_SHEETS"]["project_id"],
+                        "private_key_id": secrets["GOOGLE_SHEETS"]["private_key_id"],
+                        "private_key": secrets["GOOGLE_SHEETS"]["private_key"],
+                        "client_email": secrets["GOOGLE_SHEETS"]["client_email"],
+                        "client_id": secrets["GOOGLE_SHEETS"]["client_id"],
+                        "auth_uri": secrets["GOOGLE_SHEETS"]["auth_uri"],
+                        "token_uri": secrets["GOOGLE_SHEETS"]["token_uri"],
+                        "auth_provider_x509_cert_url": secrets["GOOGLE_SHEETS"]["auth_provider_x509_cert_url"],
+                        "client_x509_cert_url": secrets["GOOGLE_SHEETS"]["client_x509_cert_url"]
                     }
                     
                     credentials = Credentials.from_service_account_info(
@@ -146,7 +152,11 @@ class GoogleSheetsDB:
                     raise Exception("No credentials found. Please add secrets.toml or credentials.json file")
             
             self.client = gspread.authorize(credentials)
-            sheet_id = st.secrets.get("GOOGLE_SHEET_ID", "1q9jfezVWpFYAmvjo81Lk788kf9DNwqvSx7yxHWRGkec")
+            # Get sheet ID from secrets or use default
+            try:
+                sheet_id = secrets.get("GOOGLE_SHEET_ID", "1q9jfezVWpFYAmvjo81Lk788kf9DNwqvSx7yxHWRGkec")
+            except:
+                sheet_id = "1q9jfezVWpFYAmvjo81Lk788kf9DNwqvSx7yxHWRGkec"
             self.sheet = self.client.open_by_key(sheet_id)
             self._initialize_sheets()
             self.connected = True
@@ -520,6 +530,11 @@ def main():
         st.error(f"Error loading page: {e}")
         st.exception(e)
 
-if __name__ == "__main__":
+# Streamlit automatically runs the script, so we call main() directly
+# This ensures the app starts even if there are errors
+try:
     main()
+except Exception as e:
+    st.error(f"An error occurred: {str(e)}")
+    st.exception(e)
 
