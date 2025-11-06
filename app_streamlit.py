@@ -900,146 +900,221 @@ def check_password(password: str, password_hash: str) -> bool:
     return hash_password(password) == password_hash
 
 def login_page():
-    """Login page - Glassmorphism design"""
-    # Inject glassmorphism CSS
+    """Login page - Modern minimalist design with shadow effects"""
+    # Inject CSS for modern login design
     st.markdown("""
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #000000;
+            --secondary: #FFFFFF;
+            --accent: #FF5E5B;
+            --shadow: 8px 8px 0px var(--primary);
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Courier New', monospace !important;
         }
         
         .stApp {
-            background-color: #080710 !important;
-            background: #080710 !important;
-        }
-        
-        .glassmorphism-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
+            background-color: var(--secondary) !important;
+            background: var(--secondary) !important;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            min-height: 100vh;
+            padding: 20px;
         }
         
-        .background {
-            width: 430px;
-            height: 520px;
-            position: absolute;
-            transform: translate(-50%, -50%);
-            left: 50%;
-            top: 50%;
-            z-index: 1;
-        }
-        
-        .background .shape {
-            height: 200px;
-            width: 200px;
-            position: absolute;
-            border-radius: 50%;
-        }
-        
-        .shape:first-child {
-            background: linear-gradient(#1845ad, #23a2f6);
-            left: -80px;
-            top: -80px;
-        }
-        
-        .shape:last-child {
-            background: linear-gradient(to right, #ff512f, #f09819);
-            right: -30px;
-            bottom: -80px;
-        }
-        
-        .glass-form {
-            height: 520px;
-            width: 400px;
-            background-color: rgba(255,255,255,0.13);
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--primary);
+            padding: 40px 30px;
+            background-color: var(--secondary);
+            box-shadow: var(--shadow);
             position: relative;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,255,255,0.1);
-            box-shadow: 0 0 40px rgba(8,7,16,0.6);
-            padding: 50px 35px;
-            z-index: 2;
+            border-radius: 12px;
+            margin: 0 auto;
         }
         
-        .glass-form * {
-            font-family: 'Poppins', sans-serif !important;
-            color: #ffffff !important;
-            letter-spacing: 0.5px;
-            outline: none;
-            border: none;
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            right: -6px;
+            bottom: -6px;
+            border: 1px solid var(--primary);
+            z-index: -1;
+            border-radius: 12px;
         }
         
-        .glass-form h3 {
-            font-size: 32px;
-            font-weight: 500;
-            line-height: 42px;
+        .login-container h1 {
+            color: var(--primary) !important;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 700;
             text-align: center;
-            color: #ffffff !important;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--primary) !important;
+            font-size: 14px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--primary) !important;
+            background-color: var(--secondary) !important;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+            color: var(--primary) !important;
+        }
+        
+        .input-group input:focus {
+            box-shadow: 4px 4px 0px var(--primary) !important;
+        }
+        
+        .input-group input::placeholder {
+            color: #999 !important;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent) !important;
+            color: var(--secondary) !important;
+            border: 2px solid var(--primary) !important;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            box-shadow: 4px 4px 0px var(--primary) !important;
+            transform: translate(-2px, -2px);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 2px solid var(--primary);
+            margin: 0 10px;
+        }
+        
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
             margin-bottom: 20px;
         }
         
-        .glass-form label {
-            display: block;
-            margin-top: 30px;
-            font-size: 16px;
-            font-weight: 500;
-            color: #ffffff !important;
-        }
-        
-        .glass-form input {
-            display: block;
+        .social-btn {
+            width: 50px;
             height: 50px;
-            width: 100%;
-            background-color: rgba(255,255,255,0.07);
-            border-radius: 3px;
-            padding: 0 10px;
-            margin-top: 8px;
-            font-size: 14px;
-            font-weight: 300;
-            color: #ffffff !important;
-        }
-        
-        .glass-form input::placeholder {
-            color: #e5e5e5 !important;
-        }
-        
-        .glass-form button {
-            margin-top: 50px;
-            width: 100%;
-            background-color: #ffffff;
-            color: #080710;
-            padding: 15px 0;
-            font-size: 18px;
-            font-weight: 600;
-            border-radius: 5px;
+            border: 2px solid var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
-            border: none;
+            transition: all 0.3s;
+            background-color: var(--secondary);
+            font-weight: bold;
+            color: var(--primary);
         }
         
-        .register-link {
+        .social-btn:hover {
+            box-shadow: 4px 4px 0px var(--primary);
+            transform: translate(-2px, -2px);
+        }
+        
+        .footer {
             text-align: center;
             margin-top: 20px;
-            color: #ffffff !important;
+            color: var(--primary);
+            font-size: 14px;
         }
         
-        .register-link a {
-            color: #ffffff !important;
+        .footer a {
+            color: var(--primary);
+            font-weight: bold;
             text-decoration: underline;
             cursor: pointer;
         }
         
+        /* Style Streamlit inputs */
+        .login-container .stTextInput>div>div>input {
+            width: 100% !important;
+            padding: 12px 15px !important;
+            border: 2px solid var(--primary) !important;
+            background-color: var(--secondary) !important;
+            font-size: 16px !important;
+            outline: none !important;
+            transition: all 0.3s !important;
+            color: var(--primary) !important;
+            border-radius: 0 !important;
+        }
+        
+        .login-container .stTextInput>div>div>input:focus {
+            box-shadow: 4px 4px 0px var(--primary) !important;
+        }
+        
+        .login-container .stTextInput label {
+            display: block !important;
+            margin-bottom: 8px !important;
+            font-weight: bold !important;
+            color: var(--primary) !important;
+            font-size: 14px !important;
+        }
+        
+        /* Style Streamlit buttons */
+        .login-container .stButton>button {
+            width: 100% !important;
+            padding: 12px !important;
+            background-color: var(--accent) !important;
+            color: var(--secondary) !important;
+            border: 2px solid var(--primary) !important;
+            font-size: 16px !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+            margin-top: 10px !important;
+            transition: all 0.3s !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+        
+        .login-container .stButton>button:hover {
+            box-shadow: 4px 4px 0px var(--primary) !important;
+            transform: translate(-2px, -2px) !important;
+        }
+        
         /* Hide Streamlit default elements */
         .main .block-container {
-            padding: 0 !important;
+            padding: 20px !important;
             max-width: 100% !important;
         }
         
@@ -1049,23 +1124,23 @@ def login_page():
     </style>
     """, unsafe_allow_html=True)
     
-    # Glassmorphism login form
+    # Login form container
     st.markdown("""
-    <div class="glassmorphism-container">
-        <div class="background">
-            <div class="shape"></div>
-            <div class="shape"></div>
-        </div>
-        <div class="glass-form">
-            <h3>Login Here</h3>
+    <div class="login-container">
+        <h1>LOGIN</h1>
     """, unsafe_allow_html=True)
     
     # Login form
     with st.form("login_form", clear_on_submit=False):
-        username = st.text_input("Username", placeholder="Email or Phone", key="login_username")
-        password = st.text_input("Password", type="password", placeholder="Password", key="login_password")
+        st.markdown('<div class="input-group">', unsafe_allow_html=True)
+        username = st.text_input("EMAIL", placeholder="your@email.com", key="login_username")
+        st.markdown('</div>', unsafe_allow_html=True)
         
-        submit = st.form_submit_button("Log In", use_container_width=True)
+        st.markdown('<div class="input-group">', unsafe_allow_html=True)
+        password = st.text_input("PASSWORD", type="password", placeholder="••••••••", key="login_password")
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        submit = st.form_submit_button("SIGN IN", use_container_width=True)
         
         if submit:
             db = get_db()
@@ -1085,39 +1160,65 @@ def login_page():
             else:
                 st.error("Database connection failed")
     
-    # Register link
+    # Divider and social login
     st.markdown("""
-    <div class="register-link">
-        <p>Don't have an account? <a href="#" onclick="event.preventDefault(); document.querySelector('[data-testid=\\'baseButton-secondary\\']').click();">Register here</a></p>
+    <div class="divider">OR</div>
+    <div class="social-login">
+        <div class="social-btn">G</div>
+        <div class="social-btn">F</div>
+        <div class="social-btn">X</div>
+    </div>
+    <div class="footer">
+        Don't have an account? <a href="#" id="register-link">Sign up</a>
     </div>
     """, unsafe_allow_html=True)
     
-    # Toggle to registration
-    if st.button("Show Register", key="toggle_register", type="secondary"):
+    # Hidden button to trigger registration
+    if st.button("Register", key="toggle_register", type="secondary", help="Click to register"):
         st.session_state.show_register = True
         st.rerun()
     
-    st.markdown("</div></div>", unsafe_allow_html=True)
+    # JavaScript to trigger registration
+    st.markdown("""
+    <script>
+        document.getElementById('register-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('button[data-testid="baseButton-secondary"]').click();
+        });
+    </script>
+    """, unsafe_allow_html=True)
     
-    # Registration form (glassmorphism style)
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Registration form (same style)
     if st.session_state.get('show_register', False):
         st.markdown("""
-        <div class="glassmorphism-container">
-            <div class="background">
-                <div class="shape"></div>
-                <div class="shape"></div>
-            </div>
-            <div class="glass-form">
-                <h3>Register Here</h3>
+        <div class="login-container">
+            <h1>REGISTER</h1>
         """, unsafe_allow_html=True)
         
         with st.form("register_form"):
-            reg_username = st.text_input("Username", placeholder="Enter your username", key="reg_username")
-            reg_email = st.text_input("Email", placeholder="Enter your email", key="reg_email")
-            reg_password = st.text_input("Password", type="password", placeholder="Enter your password", key="reg_password")
-            reg_confirm = st.text_input("Confirm Password", type="password", placeholder="Confirm your password", key="reg_confirm")
-            reg_role = st.selectbox("Role", ["user", "admin"], key="reg_role")
-            submit_reg = st.form_submit_button("Register", use_container_width=True)
+            st.markdown('<div class="input-group">', unsafe_allow_html=True)
+            reg_username = st.text_input("USERNAME", placeholder="Enter your username", key="reg_username")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            st.markdown('<div class="input-group">', unsafe_allow_html=True)
+            reg_email = st.text_input("EMAIL", placeholder="your@email.com", key="reg_email")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            st.markdown('<div class="input-group">', unsafe_allow_html=True)
+            reg_password = st.text_input("PASSWORD", type="password", placeholder="••••••••", key="reg_password")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            st.markdown('<div class="input-group">', unsafe_allow_html=True)
+            reg_confirm = st.text_input("CONFIRM PASSWORD", type="password", placeholder="••••••••", key="reg_confirm")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            st.markdown('<div class="input-group">', unsafe_allow_html=True)
+            reg_role = st.selectbox("ROLE", ["user", "admin"], key="reg_role")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            submit_reg = st.form_submit_button("SIGN UP", use_container_width=True)
             
             if submit_reg:
                 if reg_password != reg_confirm:
@@ -1148,10 +1249,10 @@ def login_page():
                     st.error("Please fill in all fields")
         
         st.markdown("""
-        <div class="register-link">
-            <p>Already have an account? <a href="#" onclick="event.preventDefault(); location.reload();">Login here</a></p>
+        <div class="footer">
+            Already have an account? <a href="#" onclick="location.reload();">Sign in</a>
         </div>
-        </div></div>
+        </div>
         """, unsafe_allow_html=True)
 
 # Main app
