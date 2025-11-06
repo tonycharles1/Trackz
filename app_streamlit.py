@@ -26,6 +26,7 @@ st.set_page_config(
 )
 
 # Custom CSS - Premium interface design for Streamlit Cloud
+# Inject CSS early and ensure it persists
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -793,22 +794,23 @@ def main():
         """)
         return  # Return early instead of st.stop()
     
-    # Top Header Bar
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        st.markdown("""
-        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+    # Top Header Bar - Styled container
+    st.markdown("""
+    <div style="background: white; padding: 1rem 2rem; margin: -1rem -1rem 1.5rem -1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
             <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">📦</div>
             <h2 style="margin: 0; color: #1e293b; font-weight: 700; font-size: 1.5rem;">Asset Management</h2>
         </div>
-        """, unsafe_allow_html=True)
-    with col2:
-        st.markdown("""
-        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 1rem; margin-bottom: 1rem;">
-            <span style="color: #64748b; font-size: 0.9rem;">Welcome, <strong>{}</strong> ({})</span>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <span style="color: #64748b; font-size: 0.9rem;">Welcome, <strong style="color: #1e293b;">{}</strong> ({})</span>
         </div>
-        """.format(st.session_state.user_id, st.session_state.role), unsafe_allow_html=True)
-        if st.button("Logout", use_container_width=False, type="secondary"):
+    </div>
+    """.format(st.session_state.user_id, st.session_state.role), unsafe_allow_html=True)
+    
+    # Logout button in separate column for better layout
+    col1, col2, col3 = st.columns([3, 1, 1])
+    with col3:
+        if st.button("Logout", use_container_width=True, type="secondary"):
             st.session_state.authenticated = False
             st.session_state.user_id = None
             st.session_state.role = None
