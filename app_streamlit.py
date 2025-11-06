@@ -29,6 +29,7 @@ st.set_page_config(
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css');
     
     * {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
@@ -151,6 +152,20 @@ st.markdown("""
         background: transparent !important;
     }
     
+    /* Ensure icons are visible */
+    [data-testid="stSidebar"] [data-baseweb="radio"] label span,
+    [data-testid="stSidebar"] [data-baseweb="radio"] label {
+        font-size: 1rem !important;
+    }
+    
+    /* Icon styling */
+    [data-testid="stSidebar"] .menu-icon {
+        font-size: 1.2rem !important;
+        width: 20px !important;
+        display: inline-block !important;
+        text-align: center !important;
+    }
+    
     [data-testid="stSidebar"] [data-baseweb="radio"] label:hover {
         background-color: #e2e8f0 !important;
         color: #1e293b !important;
@@ -160,6 +175,10 @@ st.markdown("""
         background-color: #ff6b35 !important;
         color: white !important;
         font-weight: 600 !important;
+    }
+    
+    [data-testid="stSidebar"] [data-baseweb="radio"] input:checked + label .menu-icon {
+        color: white !important;
     }
     
     [data-testid="stSidebar"] [data-baseweb="radio"] input:checked + label::before {
@@ -811,7 +830,7 @@ def main():
         st.markdown("### MENU")
         st.markdown("---")
         
-        # Navigation menu with icons
+        # Navigation menu with icons (using emojis for better visibility)
         menu_items = [
             ("📊", "Dashboard"),
             ("📦", "Assets"),
@@ -822,13 +841,17 @@ def main():
             ("⭐", "Brands"),
             ("↔️", "Asset Movements"),
             ("🧮", "Depreciation"),
-            ("📊", "Asset Report"),
+            ("📄", "Asset Report"),
             ("📈", "Movement Report"),
             ("📝", "Logs")
         ]
         
-        # Create custom radio buttons with icons
-        page_options = [f"{icon} {name}" for icon, name in menu_items]
+        # Create custom radio buttons with icons - ensure icons display
+        page_options = []
+        for icon, name in menu_items:
+            # Use HTML to ensure icon displays properly
+            page_options.append(f"{icon} {name}")
+        
         page = st.radio(
             "Navigation",
             page_options,
@@ -836,8 +859,15 @@ def main():
             format_func=lambda x: x
         )
         
-        # Extract page name from selection
-        page = page.split(" ", 1)[1] if " " in page else page
+        # Extract page name from selection (remove icon)
+        if " " in page:
+            page = page.split(" ", 1)[1]
+        else:
+            # Fallback: match by removing emoji
+            for icon, name in menu_items:
+                if name in page:
+                    page = name
+                    break
     
     # Route to appropriate page
     try:
