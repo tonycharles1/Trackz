@@ -392,7 +392,40 @@ st.markdown("""
         background: linear-gradient(135deg, #f7931e 0%, #ff6b35 100%);
     }
 </style>
+<script>
+    // Ensure CSS loads on Streamlit Cloud - inject into head
+    (function() {
+        if (!document.querySelector('style[data-streamlit-custom-css]')) {
+            const style = document.createElement('style');
+            style.setAttribute('data-streamlit-custom-css', 'true');
+            style.innerHTML = document.querySelector('style').innerHTML;
+            document.head.appendChild(style);
+        }
+    })();
+</script>
 """, unsafe_allow_html=True)
+
+# Additional CSS injection using components.html for Streamlit Cloud
+try:
+    import streamlit.components.v1 as components
+    components.html("""
+    <style>
+        /* Critical styles for Streamlit Cloud */
+        .stApp {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+        }
+        [data-testid="stSidebar"] {
+            background: #f8fafc !important;
+        }
+        .stButton>button {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%) !important;
+            color: white !important;
+            border-radius: 12px !important;
+        }
+    </style>
+    """, height=0)
+except:
+    pass
 
 # Initialize session state
 if 'authenticated' not in st.session_state:
