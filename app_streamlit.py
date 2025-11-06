@@ -745,60 +745,81 @@ def login_page():
                 else:
                     st.error("Database connection failed")
         
-        # Register link
+        # Register link - Using Streamlit button styled as link
         st.markdown("""
         <div style="text-align: center; margin-top: 1.5rem;">
             <p style="color: #64748b; font-size: 0.9rem; margin: 0;">
-                Don't have an account? <span id="register-link" style="color: #ff6b35; text-decoration: none; font-weight: 600; cursor: pointer;">Register here</span>
+                Don't have an account? 
             </p>
         </div>
-        <script>
-            document.getElementById('register-link').addEventListener('click', function() {
-                window.parent.postMessage({type: 'streamlit:setComponentValue', value: 'show_register'}, '*');
-            });
-        </script>
         """, unsafe_allow_html=True)
         
-        # Toggle registration form
-        if st.button("Show Register", key="toggle_register", help="Click to show registration form"):
-            st.session_state.show_register = not st.session_state.get('show_register', False)
-            st.rerun()
+        # Register button styled as link
+        col_reg1, col_reg2, col_reg3 = st.columns([1, 1, 1])
+        with col_reg2:
+            if st.button("Register here", use_container_width=False, key="show_register_btn", help="Click to register"):
+                st.session_state.show_register = True
+                st.rerun()
+        
+        # Style the register button as a link
+        st.markdown("""
+        <style>
+            button[key="show_register_btn"] {
+                background: transparent !important;
+                border: none !important;
+                color: #ff6b35 !important;
+                font-weight: 600 !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                text-decoration: underline !important;
+            }
+            button[key="show_register_btn"]:hover {
+                background: transparent !important;
+                color: #f7931e !important;
+                transform: none !important;
+            }
+        </style>
+        """, unsafe_allow_html=True)
         
         # Registration form (shown when Register link clicked)
         if st.session_state.get('show_register', False):
-            with st.expander("Register New Account", expanded=True):
-                with st.form("register_form"):
-                    reg_username = st.text_input("Username", key="reg_username")
-                    reg_email = st.text_input("Email", key="reg_email")
-                    reg_password = st.text_input("Password", type="password", key="reg_password")
-                    reg_confirm = st.text_input("Confirm Password", type="password", key="reg_confirm")
-                    reg_role = st.selectbox("Role", ["user", "admin"], key="reg_role")
-                    submit_reg = st.form_submit_button("Register", use_container_width=True)
-                    
-                    if submit_reg:
-                        if reg_password != reg_confirm:
-                            st.error("Passwords do not match")
-                        elif reg_username and reg_email and reg_password:
-                            db = get_db()
-                            if db:
-                                users = db.get_all('Users')
-                                existing = next((u for u in users if u.get('Username') == reg_username), None)
-                                if existing:
-                                    st.error("Username already exists")
+            st.markdown("---")
+            st.markdown("### Register New Account")
+            with st.form("register_form"):
+                reg_username = st.text_input("Username", placeholder="Enter your username", key="reg_username")
+                reg_email = st.text_input("Email", placeholder="Enter your email", key="reg_email")
+                reg_password = st.text_input("Password", type="password", placeholder="Enter your password", key="reg_password")
+                reg_confirm = st.text_input("Confirm Password", type="password", placeholder="Confirm your password", key="reg_confirm")
+                reg_role = st.selectbox("Role", ["user", "admin"], key="reg_role")
+                submit_reg = st.form_submit_button("Register", use_container_width=True, type="primary")
+                
+                if submit_reg:
+                    if reg_password != reg_confirm:
+                        st.error("Passwords do not match")
+                    elif reg_username and reg_email and reg_password:
+                        db = get_db()
+                        if db:
+                            users = db.get_all('Users')
+                            existing = next((u for u in users if u.get('Username') == reg_username), None)
+                            if existing:
+                                st.error("Username already exists")
+                            else:
+                                user_data = {
+                                    'Username': reg_username,
+                                    'Email': reg_email,
+                                    'Password': hash_password(reg_password),
+                                    'Role': reg_role
+                                }
+                                if db.insert('Users', user_data):
+                                    st.success("Registration successful! Please login.")
+                                    st.session_state.show_register = False
+                                    st.rerun()
                                 else:
-                                    user_data = {
-                                        'Username': reg_username,
-                                        'Email': reg_email,
-                                        'Password': hash_password(reg_password),
-                                        'Role': reg_role
-                                    }
-                                    if db.insert('Users', user_data):
-                                        st.success("Registration successful! Please login.")
-                                        st.session_state.show_register = False
-                                    else:
-                                        st.error("Registration failed")
+                                    st.error("Registration failed")
                         else:
-                            st.error("Please fill in all fields")
+                            st.error("Database connection failed")
+                    else:
+                        st.error("Please fill in all fields")
         
         # Footer
         st.markdown("""
